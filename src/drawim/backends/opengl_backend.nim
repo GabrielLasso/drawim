@@ -3,6 +3,7 @@ import opengl, staticglfw
 var window_width: int
 var window_height: int
 var window: Window
+var mouseX, mouseY: int
 
 # Maps (0,0) to (-1, 1) and (window_width, window_height) to (1, -1)
 proc getGlCoords(x, y: int): (float, float) =
@@ -44,6 +45,12 @@ proc background*(r,g,b: float) =
   glClearColor(r, g, b, 1)
   glClear(GL_COLOR_BUFFER_BIT)
 
+let cursorPos: CursorPosFun = proc(window: Window, x, y: cdouble) {.cdecl.} =
+  mouseX = int(x)
+  mouseY = int(y)
+
+proc getCursorPos*(): (int, int) = (mouseX, mouseY)
+
 proc initialize*(name: string, w, h: int) =
   if init() == 0:
     quit("Failed to Initialize GLFW.")
@@ -53,6 +60,8 @@ proc initialize*(name: string, w, h: int) =
   window = createWindow(cint(w), cint(h), name, nil, nil)
   window_width = w
   window_height = h
+
+  discard window.setCursorPosCallback(cursorPos)
 
   makeContextCurrent(window)
   loadExtensions()

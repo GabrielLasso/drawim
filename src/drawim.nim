@@ -118,11 +118,15 @@ proc pop*() =
     coordinates = coordinatesStack[^1]
     coordinatesStack.setLen(coordinatesStack.len - 1)
 
-proc run*(w, h: int, draw: proc(), name: string = "Drawim") =
+proc mouseX*(): int = backend.getCursorPos()[0]
+proc mouseY*(): int = backend.getCursorPos()[1]
+
+proc run*(w, h: int, draw: proc(), setup: proc() = proc() = discard, name: string = "Drawim") =
   backend.initialize(name, w, h)
   width = w
   height = h
 
+  setup()
   while backend.isRunning():
     coordinates.rotation = 0.0
     coordinates.sin_rotation = 0.0
