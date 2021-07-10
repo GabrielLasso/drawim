@@ -20,7 +20,7 @@ proc branch(len: int) =
 
 proc draw() =
   background(200)
-  fill(30,150,15)
+  stroke(30,150,15)
   translate(int(width / 2),height)
   rotate(PI)
 

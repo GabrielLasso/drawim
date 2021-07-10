@@ -51,6 +51,12 @@ let cursorPos: CursorPosFun = proc(window: Window, x, y: cdouble) {.cdecl.} =
 
 proc getCursorPos*(): (int, int) = (mouseX, mouseY)
 
+proc isKeyPressed*(key: int): bool =
+  result = window.getKey(cint(key)) == 1
+
+proc isMousePressed*(btn: int): bool =
+  result = window.getMouseButton(cint(btn)) == 1
+
 proc initialize*(name: string, w, h: int) =
   if init() == 0:
     quit("Failed to Initialize GLFW.")
@@ -65,7 +71,6 @@ proc initialize*(name: string, w, h: int) =
 
   makeContextCurrent(window)
   loadExtensions()
-  glColor3i(0, 0, 0)
 
 proc afterDraw*() =
   window.swapBuffers()
