@@ -1,5 +1,4 @@
 import math
-
 when not defined(js):
   import drawim/backends/opengl_backend as backend
 
@@ -55,7 +54,7 @@ proc ellipseFill*(cx, cy, rx, ry: int) =
   backend.drawPolygonFill(vertices)
 
 proc ellipse*(cx, cy, rx, ry: int) =
-  const num_segments = 100
+  const num_segments = 128
   let theta = 2 * PI / num_segments
   let c = cos(theta)
   let s = sin(theta)
@@ -77,10 +76,14 @@ proc background*(r,g,b: int) =
 proc background*(r,g,b: float) =
   backend.background(r,g,b)
 
+proc rotate*(theta: float) = 
+  backend.rotate(theta)
+
 proc run*(w, h: int, draw: proc(), name: string = "Drawim") =
   backend.initialize(name, w, h)
 
   while backend.isRunning():
+    rotate(0.0)
     draw()
 
     backend.afterDraw()
