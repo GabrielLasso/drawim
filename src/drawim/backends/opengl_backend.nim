@@ -60,6 +60,9 @@ proc initialize*(name: string, w, h: int) =
 
 proc afterDraw*() =
   window.swapBuffers()
+  glReadBuffer(GL_FRONT);
+  glDrawBuffer(GL_BACK);
+  glCopyPixels(0, 0, GLsizei(window_width), GLsizei(window_height), GL_COLOR)
   pollEvents()
 
 proc terminate*() =
