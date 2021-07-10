@@ -1,0 +1,29 @@
+import ../src/drawim
+import math
+
+proc branch(len: int) =
+  if (len < 1):
+    return
+  line(0,0,0,len)
+
+  push()
+  translate(0,len)
+  rotate(PI / 6)
+  branch(int(float(len)*0.7))
+  pop()
+
+  push()
+  translate(0,len)
+  rotate(-PI / 6)
+  branch(int(float(len)*0.7))
+  pop()
+
+proc draw() =
+  background(200)
+  fill(30,150,15)
+  translate(300,400)
+  rotate(PI)
+
+  branch(100)
+
+run(600, 400, draw)
