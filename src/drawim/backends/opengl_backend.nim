@@ -1,21 +1,13 @@
-import opengl, staticglfw, math
+import opengl, staticglfw
 
 var window_width: int
 var window_height: int
 var window: Window
 
-var rotation = 0.0
-var sin_rotation = 0.0
-var cos_rotation = 1.0
-
-var ox, oy = 0
-
 # Maps (0,0) to (-1, 1) and (window_width, window_height) to (1, -1)
 proc getGlCoords(x, y: int): (float, float) =
-  let x_rot = float(ox) + float(x)*cos_rotation - float(y)*sin_rotation
-  let y_rot = float(oy) + float(x)*sin_rotation + float(y)*cos_rotation
-  let new_x = 2 * (x_rot - window_width/2)/float(window_width)
-  let new_y = -2 * (y_rot - window_height/2)/float(window_height)
+  let new_x = 2 * (float(x) - window_width/2)/float(window_width)
+  let new_y = -2 * (float(y) - window_height/2)/float(window_height)
   return (new_x, new_y)
 
 proc changeColor*(r, g, b: float) =
@@ -52,15 +44,6 @@ proc background*(r,g,b: float) =
   glClearColor(r, g, b, 1)
   glClear(GL_COLOR_BUFFER_BIT)
 
-proc rotate*(theta: float) =
-  rotation += theta
-  sin_rotation = sin(rotation)
-  cos_rotation = cos(rotation)
-
-proc translate*(x,y: int) =
-  ox += int(float(x)*cos_rotation - float(y)*sin_rotation)
-  oy += int(float(x)*sin_rotation + float(y)*cos_rotation)
-
 proc initialize*(name: string, w, h: int) =
   if init() == 0:
     quit("Failed to Initialize GLFW.")
@@ -76,11 +59,6 @@ proc initialize*(name: string, w, h: int) =
   glColor3i(0, 0, 0)
 
 proc afterDraw*() =
-  rotation = 0.0
-  sin_rotation = 0.0
-  cos_rotation = 1.0
-  ox = 0
-  oy = 0
   window.swapBuffers()
   pollEvents()
 

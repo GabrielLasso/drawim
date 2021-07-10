@@ -2,8 +2,22 @@ import math
 when not defined(js):
   import drawim/backends/opengl_backend as backend
 
+type Coordinates = object
+  ox, oy: int
+  rotation: float
+  sin_rotation: float
+  cos_rotation: float
+
+var coordinates = Coordinates(cos_rotation: 1.0)
+var coordinatesStack = newSeq[Coordinates]()
+
 proc rgbIntToFloat(r,g,b: int): (float, float, float) =
   return (r/255, g/255, b/255)
+
+proc getRealPosition(x,y: int): (int, int) =
+  let x_rot = int(float(coordinates.ox) + float(x)*coordinates.cos_rotation - float(y)*coordinates.sin_rotation)
+  let y_rot = int(float(coordinates.oy) + float(x)*coordinates.sin_rotation + float(y)*coordinates.cos_rotation)
+  result = (x_rot, y_rot)
 
 proc fill*(r, g, b: float) =
   backend.changeColor(r, g, b)
@@ -17,24 +31,24 @@ proc fill*(gray: int | float) =
 
 proc rectFill*(x,y,w,h: int) =
   backend.drawPolygonFill(@[
-    (x,y),
-    (x, y+h),
-    (x+w, y+h),
-    (x+w, y)
+    getRealPosition(x,y),
+    getRealPosition(x, y+h),
+    getRealPosition(x+w, y+h),
+    getRealPosition(x+w, y)
   ])
 
 proc rect*(x,y,w,h: int) =
   backend.drawPolygon(@[
-    (x,y),
-    (x, y+h),
-    (x+w, y+h),
-    (x+w, y)
+    getRealPosition(x,y),
+    getRealPosition(x, y+h),
+    getRealPosition(x+w, y+h),
+    getRealPosition(x+w, y)
   ])
 
 proc line*(x1,y1,x2,y2: int) =
   backend.drawLines(@[
-    (x1,y1),
-    (x2, y2)
+    getRealPosition(x1,y1),
+    getRealPosition(x2, y2)
   ])
 
 proc ellipseFill*(cx, cy, rx, ry: int) =
@@ -47,7 +61,7 @@ proc ellipseFill*(cx, cy, rx, ry: int) =
   var vertices: seq[(int, int)]
 
   for i in 0..<num_segments:
-    vertices.add((int(x * float(rx) + float(cx)), int(y * float(ry) + float(cy))))
+    vertices.add(getRealPosition(int(x * float(rx) + float(cx)), int(y * float(ry) + float(cy))))
     let t = x;
     x = c * x - s * y;
     y = s * t + c * y;
@@ -63,11 +77,16 @@ proc ellipse*(cx, cy, rx, ry: int) =
   var vertices: seq[(int, int)]
 
   for i in 0..<num_segments:
-    vertices.add((int(x * float(rx) + float(cx)), int(y * float(ry) + float(cy))))
+    vertices.add(getRealPosition(int(x * float(rx) + float(cx)), int(y * float(ry) + float(cy))))
     let t = x;
     x = c * x - s * y;
     y = s * t + c * y;
   backend.drawPolygon(vertices)
+
+proc circle*(x, y, r: int) = ellipse(x, y, r, r)
+proc circleFill*(x, y, r: int) = ellipseFill(x, y, r, r)
+proc square*(x, y, s: int) = rect(x, y, s, s)
+proc squareFill*(x, y, s: int) = rectFill(x, y, s, s)
 
 proc background*(r,g,b: int) =
   let (r_f, g_f, b_f) = rgbIntToFloat(r,g,b)
@@ -79,16 +98,33 @@ proc background*(r,g,b: float) =
 proc background*(gray: float | int) =
   background(gray, gray, gray)
 
-proc rotate*(theta: float) = 
-  backend.rotate(theta)
+proc rotate*(theta: float) =
+  coordinates.rotation += theta
+  coordinates.sin_rotation = sin(coordinates.rotation)
+  coordinates.cos_rotation = cos(coordinates.rotation)
 
-proc translate*(x, y: int) = 
-  backend.translate(x,y)
+proc translate*(x,y: int) =
+  coordinates.ox += int(float(x)*coordinates.cos_rotation - float(y)*coordinates.sin_rotation)
+  coordinates.oy += int(float(x)*coordinates.sin_rotation + float(y)*coordinates.cos_rotation)
+
+proc push*() =
+  coordinatesStack.add(coordinates)
+
+proc pop*() =
+  if coordinatesStack.len > 0:
+    coordinates = coordinatesStack[^1]
+    coordinatesStack.setLen(coordinatesStack.len - 1)
 
 proc run*(w, h: int, draw: proc(), name: string = "Drawim") =
   backend.initialize(name, w, h)
 
   while backend.isRunning():
+    coordinates.rotation = 0.0
+    coordinates.sin_rotation = 0.0
+    coordinates.cos_rotation = 1.0
+    coordinates.ox = 0
+    coordinates.oy = 0
+
     draw()
 
     backend.afterDraw()
