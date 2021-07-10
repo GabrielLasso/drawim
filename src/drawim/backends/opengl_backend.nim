@@ -53,7 +53,7 @@ proc background*(r,g,b: float) =
   glClear(GL_COLOR_BUFFER_BIT)
 
 proc rotate*(theta: float) =
-  rotation = theta
+  rotation += theta
   sin_rotation = sin(rotation)
   cos_rotation = cos(rotation)
 
@@ -73,9 +73,12 @@ proc initialize*(name: string, w, h: int) =
 
   makeContextCurrent(window)
   loadExtensions()
+  glColor3i(0, 0, 0)
 
 proc afterDraw*() =
-  rotate(0.0)
+  rotation = 0.0
+  sin_rotation = 0.0
+  cos_rotation = 1.0
   ox = 0
   oy = 0
   window.swapBuffers()
