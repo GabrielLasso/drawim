@@ -2,6 +2,9 @@ import math
 when not defined(js):
   import drawim/backends/opengl_backend as backend
 
+var height* = 0
+var width* = 0
+
 type Coordinates = object
   ox, oy: int
   rotation: float
@@ -117,6 +120,8 @@ proc pop*() =
 
 proc run*(w, h: int, draw: proc(), name: string = "Drawim") =
   backend.initialize(name, w, h)
+  width = w
+  height = h
 
   while backend.isRunning():
     coordinates.rotation = 0.0
