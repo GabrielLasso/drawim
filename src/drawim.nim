@@ -38,7 +38,7 @@ proc line*(x1,y1,x2,y2: int) =
   ])
 
 proc ellipseFill*(cx, cy, rx, ry: int) =
-  const num_segments = 128
+  const num_segments = 512
   let theta = 2 * PI / num_segments
   let c = cos(theta)
   let s = sin(theta)
@@ -54,7 +54,7 @@ proc ellipseFill*(cx, cy, rx, ry: int) =
   backend.drawPolygonFill(vertices)
 
 proc ellipse*(cx, cy, rx, ry: int) =
-  const num_segments = 128
+  const num_segments = 512
   let theta = 2 * PI / num_segments
   let c = cos(theta)
   let s = sin(theta)
@@ -76,14 +76,19 @@ proc background*(r,g,b: int) =
 proc background*(r,g,b: float) =
   backend.background(r,g,b)
 
+proc background*(gray: float | int) =
+  background(gray, gray, gray)
+
 proc rotate*(theta: float) = 
   backend.rotate(theta)
+
+proc translate*(x, y: int) = 
+  backend.translate(x,y)
 
 proc run*(w, h: int, draw: proc(), name: string = "Drawim") =
   backend.initialize(name, w, h)
 
   while backend.isRunning():
-    rotate(0.0)
     draw()
 
     backend.afterDraw()
