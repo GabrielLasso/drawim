@@ -1,8 +1,7 @@
 import ../src/drawim
 
-var theta = 0.0
 proc draw() =
-  theta += 0.01
+  let theta = frameCount / 100
   background(20);
   translate(int(width / 2),int(height / 2))
   # Draw the sun

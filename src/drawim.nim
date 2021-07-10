@@ -4,6 +4,7 @@ when not defined(js):
 
 var height* = 0
 var width* = 0
+var frameCount* = 0
 
 var fillColor: (float, float, float) = (1.0, 1.0, 1.0)
 var strokeColor: (float, float, float) = (0.0, 0.0, 0.0)
@@ -158,6 +159,7 @@ proc run*(w, h: int, draw: proc(), setup: proc() = proc() = discard, name: strin
     coordinates.cos_rotation = 1.0
     coordinates.ox = 0
     coordinates.oy = 0
+    frameCount += 1
 
     draw()
 
