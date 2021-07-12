@@ -1,4 +1,4 @@
-import math
+import math, strutils
 when not defined(js):
   import drawim/backends/opengl_backend as backend
 
@@ -45,6 +45,34 @@ proc fill*(r, g, b, a: int) =
 
 proc fill*(gray: int | float) =
   fill(gray, gray, gray)
+
+proc fill*(hex: string) =
+  let sanitizedHex: string = hex.strip(chars = {'#'} + Whitespace)
+  case sanitizedHex.len:
+  of 3:
+    let r = sanitizedHex[0..<1].parseHexInt() * 16 + 15
+    let g = sanitizedHex[1..<2].parseHexInt() * 16 + 15
+    let b = sanitizedHex[2..<3].parseHexInt() * 16 + 15
+    fill(r,g,b)
+  of 4:
+    let r = sanitizedHex[0..<1].parseHexInt() * 16 + 15
+    let g = sanitizedHex[1..<2].parseHexInt() * 16 + 15
+    let b = sanitizedHex[2..<3].parseHexInt() * 16 + 15
+    let a = sanitizedHex[3..<4].parseHexInt() * 16 + 15
+    fill(r,g,b,a)
+  of 6:
+    let r = sanitizedHex[0..<2].parseHexInt()
+    let g = sanitizedHex[2..<4].parseHexInt()
+    let b = sanitizedHex[4..<6].parseHexInt()
+    fill(r,g,b)
+  of 8:
+    let r = sanitizedHex[0..<2].parseHexInt()
+    let g = sanitizedHex[2..<4].parseHexInt()
+    let b = sanitizedHex[4..<6].parseHexInt()
+    let a = sanitizedHex[6..<8].parseHexInt()
+    fill(r,g,b,a)
+  else:
+    raise newException(ValueError, "Invalid　hex color")
 
 proc stroke*(r, g, b: float) =
   strokeColor = (r, g, b, 1.0)
