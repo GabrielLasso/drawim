@@ -11,8 +11,8 @@ proc getGlCoords(x, y: int): (float, float) =
   let new_y = -2 * (float(y) - window_height/2)/float(window_height)
   return (new_x, new_y)
 
-proc changeColor*(r, g, b: float) =
-  glColor3f(r, g, b)
+proc changeColor*(r, g, b, a: float) =
+  glColor4f(r, g, b, a)
 
 proc drawPolygonFill*(vertices: seq[(int, int)]) =
   glBegin(GL_POLYGON)
@@ -71,6 +71,8 @@ proc initialize*(name: string, w, h: int) =
 
   makeContextCurrent(window)
   loadExtensions()
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
 proc afterDraw*() =
   window.swapBuffers()

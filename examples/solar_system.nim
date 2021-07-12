@@ -17,7 +17,7 @@ proc draw() =
   rotate(theta)
   translate(40,0)
   # Draw the moon
-  fill(200,200,200)
+  fill(200)
   circleFill(0,0,5)
 
 

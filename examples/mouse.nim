@@ -5,6 +5,7 @@ proc setup() =
   background(220)
 
 proc draw() =
+  fill(255,255,255,200)
   if isMousePressed(MOUSE_BUTTON_LEFT):
     circleFill(mouseX(), mouseY(), 20)
 

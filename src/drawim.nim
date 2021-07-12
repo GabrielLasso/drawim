@@ -6,8 +6,8 @@ var height* = 0
 var width* = 0
 var frameCount* = 0
 
-var fillColor: (float, float, float) = (1.0, 1.0, 1.0)
-var strokeColor: (float, float, float) = (0.0, 0.0, 0.0)
+var fillColor: (float, float, float, float) = (1.0, 1.0, 1.0, 1.0)
+var strokeColor: (float, float, float, float) = (0.0, 0.0, 0.0, 1.0)
 
 type Coordinates = object
   ox, oy: int
@@ -21,37 +21,53 @@ var coordinatesStack = newSeq[Coordinates]()
 proc rgbIntToFloat(r,g,b: int): (float, float, float) =
   return (r/255, g/255, b/255)
 
+proc rgbIntToFloat(r,g,b,a: int): (float, float, float, float) =
+  return (r/255, g/255, b/255, a/255)
+
 proc getRealPosition(x,y: int): (int, int) =
   let x_rot = int(float(coordinates.ox) + float(x)*coordinates.cos_rotation - float(y)*coordinates.sin_rotation)
   let y_rot = int(float(coordinates.oy) + float(x)*coordinates.sin_rotation + float(y)*coordinates.cos_rotation)
   result = (x_rot, y_rot)
 
 proc fill*(r, g, b: float) =
-  fillColor = (r, g, b)
-  backend.changeColor(r, g, b)
+  fillColor = (r, g, b, 1.0)
 
 proc fill*(r, g, b: int) =
   let (r_f, g_f, b_f) = rgbIntToFloat(r,g,b)
-  fillColor = (r_f, g_f, b_f)
-  backend.changeColor(r_f, g_f, b_f)
+  fillColor = (r_f, g_f, b_f, 1.0)
+
+proc fill*(r, g, b, a: float) =
+  fillColor = (r, g, b, a)
+
+proc fill*(r, g, b, a: int) =
+  let (r_f, g_f, b_f, a_f) = rgbIntToFloat(r,g,b,a)
+  fillColor = (r_f, g_f, b_f, a_f)
 
 proc fill*(gray: int | float) =
   fill(gray, gray, gray)
 
 proc stroke*(r, g, b: float) =
-  strokeColor = (r, g, b)
+  strokeColor = (r, g, b, 1.0)
 
 proc stroke*(r, g, b: int) =
   let (r_f, g_f, b_f) = rgbIntToFloat(r,g,b)
-  strokeColor = (r_f, g_f, b_f)
+  strokeColor = (r_f, g_f, b_f, 1.0)
+
+proc stroke*(r, g, b, a: float) =
+  strokeColor = (r, g, b, a)
+
+proc stroke*(r, g, b, a: int) =
+  let (r_f, g_f, b_f, a_f) = rgbIntToFloat(r,g,b,a)
+  strokeColor = (r_f, g_f, b_f, a_f)
 
 proc stroke*(gray: int | float) =
   stroke(gray, gray, gray)
 
 proc setStrokeColor() =
-  backend.changeColor(strokeColor[0], strokeColor[1], strokeColor[2])
+  backend.changeColor(strokeColor[0], strokeColor[1], strokeColor[2], strokeColor[3])
+
 proc setFillColor() =
-  backend.changeColor(fillColor[0], fillColor[1], fillColor[2])
+  backend.changeColor(fillColor[0], fillColor[1], fillColor[2], fillColor[3])
 
 proc rect*(x,y,w,h: int) =
   setStrokeColor()
@@ -71,6 +87,23 @@ proc rectFill*(x,y,w,h: int) =
     getRealPosition(x+w, y)
   ])
   rect(x,y,w,h)
+
+proc triangle*(x1,y1,x2,y2,x3,y3: int) =
+  setStrokeColor()
+  backend.drawPolygon(@[
+    getRealPosition(x1,y1),
+    getRealPosition(x2, y2),
+    getRealPosition(x3, y3)
+  ])
+
+proc triangleFill*(x1,y1,x2,y2,x3,y3: int) =
+  setFillColor()
+  backend.drawPolygonFill(@[
+    getRealPosition(x1,y1),
+    getRealPosition(x2, y2),
+    getRealPosition(x3, y3)
+  ])
+  triangle(x1,y1,x2,y2,x3,y3)
 
 proc line*(x1,y1,x2,y2: int) =
   setStrokeColor()
