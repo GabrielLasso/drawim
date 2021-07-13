@@ -14,7 +14,7 @@ proc getGlCoords(x, y: int): (float, float) =
 proc changeColor*(r, g, b, a: float) =
   glColor4f(r, g, b, a)
 
-proc drawPolygonFill*(vertices: seq[(int, int)]) =
+proc drawFilledPolygon*(vertices: seq[(int, int)]) =
   glBegin(GL_POLYGON)
 
   for (x, y) in vertices:
@@ -32,8 +32,8 @@ proc drawPolygon*(vertices: seq[(int, int)]) =
 
   glEnd()
 
-proc drawLines*(vertices: seq[(int, int)]) =
-  glBegin(GL_LINES)
+proc drawPath*(vertices: seq[(int, int)]) =
+  glBegin(GL_LINE_STRIP)
 
   for (x, y) in vertices:
     let (glX, glY) = getGlCoords(x,y)
