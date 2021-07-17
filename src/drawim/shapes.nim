@@ -45,7 +45,7 @@ proc endPath*() =
   backend.drawPath(vertices)
 
 proc vertex*(x,y: SomeNumber) =
-  let (realX, realY) = getRealPosition(x,y)
+  let (realX, realY) = getScreenPosition(x,y)
   drawingStack[^1].vertices.add((realX, realY))
 
 proc rect*(x,y,w,h: SomeNumber) =

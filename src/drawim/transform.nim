@@ -7,6 +7,10 @@ var matrix = (
   (1.0,0.0,0.0),
   (0.0,1.0,0.0), 
 )
+var reverse_matrix = (
+  (1.0,0.0,0.0),
+  (0.0,1.0,0.0), 
+)
 var transformationStack = newSeq[Transformation]()
 
 func `*`(x: Vector2D, A: Transformation): Vector2D =
@@ -26,21 +30,36 @@ proc rotate*(theta: SomeNumber) =
     (cos(theta), sin(theta), 0.0),
     (-sin(theta), cos(theta), 0.0)
   )
+  let reverse_rotation = (
+    (cos(-theta), sin(-theta), 0.0),
+    (-sin(-theta), cos(-theta), 0.0)
+  )
   matrix = matrix * rotation
+  reverse_matrix = reverse_matrix * reverse_rotation
 
 proc translate*(x,y: SomeNumber) =
   let tranlation = (
     (1.0, 0.0, float(x)),
     (0.0, 1.0, float(y))
   )
+  let reverse_translation = (
+    (1.0, 0.0, float(-x)),
+    (0.0, 1.0, float(-y))
+  )
   matrix = matrix * tranlation
+  reverse_matrix = reverse_matrix * reverse_translation
 
 proc scale*(x,y: SomeNumber) =
-  let tranlation = (
+  let scale = (
     (float(x), 0.0, 0.0),
     (0.0, float(y), 0.0)
   )
-  matrix = matrix * tranlation
+  let reverse_scale = (
+    (1 / float(x), 0.0, 0.0),
+    (0.0, 1 / float(y), 0.0)
+  )
+  matrix = matrix * scale
+  reverse_matrix = reverse_matrix * reverse_scale
 
 proc push*() =
   transformationStack.add(matrix)
@@ -55,7 +74,15 @@ proc resetTransform*() =
     (1.0, 0.0, 0.0),
     (0.0, 1.0, 0.0)
   )
+  reverse_matrix = (
+    (1.0, 0.0, 0.0),
+    (0.0, 1.0, 0.0)
+  )
 
-proc getRealPosition*(x,y: SomeNumber): (int, int) =
+proc getScreenPosition*(x,y: SomeNumber): (int, int) =
   let (x_res, y_res) = (float(x), float(y)) * matrix
+  result = (int(x_res), int(y_res))
+
+proc getRealPosition*(x,y: int): (int, int) =
+  let (x_res, y_res) = (float(x), float(y)) * reverse_matrix
   result = (int(x_res), int(y_res))
