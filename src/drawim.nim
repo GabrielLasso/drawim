@@ -1,5 +1,4 @@
-import math, strutils
-import drawim/coordinates, drawim/shapes, drawim/colors
+import drawim/transform, drawim/shapes, drawim/colors
 when not defined(js):
   import drawim/backends/opengl_backend as backend
 
@@ -20,10 +19,11 @@ proc fill*(r,g,b, a: int | float) = colors.fill(r,g,b, a)
 proc fill*(gray: int | float) = colors.fill(gray)
 proc fill*(hex: string) = colors.fill(hex)
 
-proc rotate*(theta: float) = coordinates.rotate(theta)
-proc translate*(x,y: int) = coordinates.translate(x,y)
-proc push*() = coordinates.push()
-proc pop*() = coordinates.pop()
+proc rotate*(theta: SomeNumber) = transform.rotate(theta)
+proc translate*(x,y: SomeNumber) = transform.translate(x,y)
+proc scale*(x,y: SomeNumber) = transform.scale(x,y)
+proc push*() = transform.push()
+proc pop*() = transform.pop()
 
 proc beginPath*() = shapes.beginPath()
 proc beginShape*() = shapes.beginShape()
@@ -41,6 +41,7 @@ proc ellipse*(cx, cy, rx, ry: SomeNumber) = shapes.ellipse(cx, cy, rx, ry)
 proc ellipseFill*(cx, cy, rx, ry: SomeNumber) = shapes.ellipseFill(cx, cy, rx, ry)
 proc circle*(cx, cy, r: SomeNumber) = shapes.circle(cx, cy, r)
 proc circleFill*(cx, cy, r: SomeNumber) = shapes.circleFill(cx, cy, r)
+proc line*(x1, y1,x2, y2: SomeNumber) = shapes.line(x1, y1, x2, y2)
 
 proc run*(w, h: int, draw: proc(), setup: proc() = proc() = discard, name: string = "Drawim") =
   backend.initialize(name, w, h)
@@ -49,7 +50,7 @@ proc run*(w, h: int, draw: proc(), setup: proc() = proc() = discard, name: strin
 
   setup()
   while backend.isRunning():
-    resetCoordinates()
+    resetTransform()
     frameCount += 1
 
     draw()

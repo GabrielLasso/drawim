@@ -1,5 +1,5 @@
 import math
-import colors, coordinates
+import colors, transform
 when not defined(js):
   import backends/opengl_backend as backend
 

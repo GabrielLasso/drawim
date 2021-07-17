@@ -1,0 +1,61 @@
+import math
+
+type
+  Transformation = ((float, float, float), (float, float, float))
+  Vector2D = (float, float)
+var matrix = (
+  (1.0,0.0,0.0),
+  (0.0,1.0,0.0), 
+)
+var transformationStack = newSeq[Transformation]()
+
+func `*`(x: Vector2D, A: Transformation): Vector2D =
+  result = (
+    x[0]*A[0][0] + x[1]*A[0][1] + A[0][2],
+    x[0]*A[1][0] + x[1]*A[1][1] + A[1][2]
+  )
+
+func `*`(A: Transformation, B: Transformation): Transformation =
+  result = (
+    (A[0][0]*B[0][0] + A[0][1]*B[1][0], A[0][0]*B[0][1] + A[0][1]*B[1][1], A[0][0]*B[0][2] + A[0][1]*B[1][2] + A[0][2]),
+    (A[1][0]*B[0][0] + A[1][1]*B[1][0], A[1][0]*B[0][1] + A[1][1]*B[1][1], A[1][0]*B[0][2] + A[1][1]*B[1][2] + A[1][2])
+  )
+
+proc rotate*(theta: SomeNumber) =
+  let rotation = (
+    (cos(theta), sin(theta), 0.0),
+    (-sin(theta), cos(theta), 0.0)
+  )
+  matrix = matrix * rotation
+
+proc translate*(x,y: SomeNumber) =
+  let tranlation = (
+    (1.0, 0.0, float(x)),
+    (0.0, 1.0, float(y))
+  )
+  matrix = matrix * tranlation
+
+proc scale*(x,y: SomeNumber) =
+  let tranlation = (
+    (float(x), 0.0, 0.0),
+    (0.0, float(y), 0.0)
+  )
+  matrix = matrix * tranlation
+
+proc push*() =
+  transformationStack.add(matrix)
+
+proc pop*() =
+  if transformationStack.len > 0:
+    matrix = transformationStack[^1]
+    transformationStack.setLen(transformationStack.len - 1)
+
+proc resetTransform*() =
+  matrix = (
+    (1.0, 0.0, 0.0),
+    (0.0, 1.0, 0.0)
+  )
+
+proc getRealPosition*(x,y: SomeNumber): (int, int) =
+  let (x_res, y_res) = (float(x), float(y)) * matrix
+  result = (int(x_res), int(y_res))

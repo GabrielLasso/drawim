@@ -1,5 +1,6 @@
 import ../src/drawim
-import random
+import ../src/drawim/inputs
+import math
 
 proc hilbert_curve(x1,y1,x2,y2,x3,y3,x4,y4: int, max_depth = 6) =
   if (max_depth < 1):
@@ -27,17 +28,9 @@ proc draw() =
   background(250)
   stroke("#FF5555")
   translate(300,300)
+  scale(sqrt(float(mouseX()*mouseX() + mouseY()*mouseY())) / 50, sqrt(float(mouseX()*mouseX() + mouseY()*mouseY())) / 50)
   beginPath()
   hilbert_curve(x1,y1,x2,y2,x3,y3,x4,y4)
   endPath()
-
-  x1 += rand(4) - 2
-  x2 += rand(4) - 2
-  x3 += rand(4) - 2
-  x4 += rand(4) - 2
-  y1 += rand(4) - 2
-  y2 += rand(4) - 2
-  y3 += rand(4) - 2
-  y4 += rand(4) - 2
 
 run(600, 600, draw)
