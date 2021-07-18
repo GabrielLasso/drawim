@@ -1,12 +1,13 @@
+import times
 import drawim/transform, drawim/shapes, drawim/colors
 when not defined(js):
   import drawim/backends/opengl_backend as backend
-
 type ColorMode* = colors.ColorMode
 
 var height* = 0
 var width* = 0
 var frameCount* = 0
+var time, deltaTime*: float = 0.0
 
 proc background*(r,g,b: int | float) = colors.background(r,g,b)
 proc background*(gray: int | float) = colors.background(gray)
@@ -51,13 +52,18 @@ proc run*(w, h: int, draw: proc(), setup: proc() = proc() = discard, name: strin
   backend.initialize(name, w, h)
   width = w
   height = h
+  time = epochTime()
 
   setup()
   while backend.isRunning():
     resetTransform()
     frameCount += 1
 
+    deltaTime = epochTime() - time
+
     draw()
+
+    time = epochTime()
 
     backend.afterDraw()
 
