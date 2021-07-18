@@ -28,9 +28,6 @@ var colorMode: ColorMode = RGB
 proc setColorMode*(mode: ColorMode) =
   colorMode = mode
 
-proc rgbIntToFloat(r,g,b: int): (float, float, float) =
-  return (r/255, g/255, b/255)
-
 proc hsvToRgb(color: Color): Color =
   if color.mode != HSV:
     return color
