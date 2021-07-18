@@ -1,34 +1,114 @@
 import strutils
+import math
 when not defined(js):
   import backends/opengl_backend as backend
 
-var fillColor: (float, float, float, float) = (1.0, 1.0, 1.0, 1.0)
-var strokeColor: (float, float, float, float) = (0.0, 0.0, 0.0, 1.0)
+type
+  ColorMode* = enum RGB, HSV
+  Color = object
+    case mode: ColorMode:
+    of RGB:
+      r, g, b: float
+    of HSV:
+      h: int
+      s, v: float
+    a: float
 
-proc rgbIntToFloat*(r,g,b: int): (float, float, float) =
+func newColorHSV(h: int,s,v,a: float): Color = Color(mode: HSV, h: h, s: s, v: v, a: a)
+func newColorHSV(h,s,v,a: int): Color = Color(mode: HSV, h: h, s: s/100, v: v/100, a: a/255)
+
+func newColorRGB(r,g,b,a: float): Color = Color(mode: RGB, r: r, g: g, b: b, a: a)
+func newColorRGB(r,g,b,a: int): Color = Color(mode: RGB, r: r/255, g: g/255, b: b/255, a: a/255)
+
+var fillColor: Color = newColorRGB(1.0, 1.0, 1.0, 1.0)
+var strokeColor: Color = newColorRGB(0.0, 0.0, 0.0, 1.0)
+var backgroundColor: Color = newColorRGB(0.0, 0.0, 0.0, 1.0)
+var colorMode: ColorMode = RGB
+
+proc setColorMode*(mode: ColorMode) =
+  colorMode = mode
+
+proc rgbIntToFloat(r,g,b: int): (float, float, float) =
   return (r/255, g/255, b/255)
 
-proc rgbIntToFloat*(r,g,b,a: int): (float, float, float, float) =
-  return (r/255, g/255, b/255, a/255)
+proc hsvToRgb(color: Color): Color =
+  if color.mode != HSV:
+    return color
+
+  let c = color.s * color.v
+  let x = c * (1 - abs((color.h / 60) mod 2.0 - 1))
+  let m = color.v - c
+
+  let (r, g, b) = case color.h mod 360:
+  of 0..59:
+    (c,x,0.0)
+  of 60..119:
+    (x,c,0.0)
+  of 120..179:
+    (0.0,c,x)
+  of 180..239:
+    (0.0,x,c)
+  of 240..299:
+    (x,0.0,c)
+  of 300..359:
+    (c,0.0,x)
+  else:
+    (0.0,0.0,0.0)
+
+  result = newColorRGB(r+m,g+m,b+m,color.a)
 
 proc fill*(r, g, b: float) =
-  fillColor = (r, g, b, 1.0)
+  case colorMode:
+  of (RGB):
+    fillColor = newColorRGB(r,g,b,1.0)
+  of (HSV):
+    raise newException(ValueError, "hue should be an integer")
 
-proc fill*(r, g, b: int) =
-  let (r_f, g_f, b_f) = rgbIntToFloat(r,g,b)
-  fillColor = (r_f, g_f, b_f, 1.0)
+proc fill*(rh, gs, bv: int) =
+  case colorMode:
+  of (RGB):
+    fillColor = newColorRGB(rh,gs,bv,255)
+  of (HSV):
+    fillColor = newColorHSV(rh,gs,bv,255)
+
+proc fill*(h: int, s, b: float) =
+  case colorMode:
+  of (RGB):
+    raise newException(ValueError, "r, g, b should have the same type")
+  of (HSV):
+    fillColor = newColorHSV(h,s,b,1.0)
 
 proc fill*(r, g, b, a: float) =
-  fillColor = (r, g, b, a)
+  case colorMode:
+  of (RGB):
+    fillColor = newColorRGB(r,g,b,a)
+  of (HSV):
+    raise newException(ValueError, "hue should be an integer")
 
-proc fill*(r, g, b, a: int) =
-  let (r_f, g_f, b_f, a_f) = rgbIntToFloat(r,g,b,a)
-  fillColor = (r_f, g_f, b_f, a_f)
+proc fill*(rh, gs, bv, a: int) =
+  case colorMode:
+  of (RGB):
+    fillColor = newColorRGB(rh,gs,bv,a)
+  of (HSV):
+    fillColor = newColorHSV(rh,gs,bv,a)
 
-proc fill*(gray: int | float) =
-  fill(gray, gray, gray)
+proc fill*(h: int, s, b, a: float) =
+  case colorMode:
+  of (RGB):
+    raise newException(ValueError, "r, g, b should have the same type")
+  of (HSV):
+    fillColor = newColorHSV(h,s,b,a)
+
+proc fill*(gray: SomeNumber) =
+  case colorMode:
+  of (RGB):
+    fill(gray, gray, gray)
+  of (HSV):
+    discard # TODO
 
 proc fill*(hex: string) =
+  if colorMode == HSV:
+    raise newException(ValueError, "Use RGB mode to use hex string")
   let sanitizedHex: string = hex.strip(chars = {'#'} + Whitespace)
   case sanitizedHex.len:
   of 3:
@@ -57,23 +137,57 @@ proc fill*(hex: string) =
     raise newException(ValueError, "Invalid　hex color")
 
 proc stroke*(r, g, b: float) =
-  strokeColor = (r, g, b, 1.0)
+  case colorMode:
+  of (RGB):
+    strokeColor = newColorRGB(r,g,b,1.0)
+  of (HSV):
+    raise newException(ValueError, "hue should be an integer")
 
-proc stroke*(r, g, b: int) =
-  let (r_f, g_f, b_f) = rgbIntToFloat(r,g,b)
-  strokeColor = (r_f, g_f, b_f, 1.0)
+proc stroke*(rh, gs, bv: int) =
+  case colorMode:
+  of (RGB):
+    strokeColor = newColorRGB(rh,gs,bv,255)
+  of (HSV):
+    strokeColor = newColorHSV(rh,gs,bv,255)
+
+proc stroke*(h: int, s, b: float) =
+  case colorMode:
+  of (RGB):
+    raise newException(ValueError, "r, g, b should have the same type")
+  of (HSV):
+    strokeColor = newColorHSV(h,s,b,1.0)
 
 proc stroke*(r, g, b, a: float) =
-  strokeColor = (r, g, b, a)
+  case colorMode:
+  of (RGB):
+    strokeColor = newColorRGB(r,g,b,a)
+  of (HSV):
+    raise newException(ValueError, "hue should be an integer")
 
-proc stroke*(r, g, b, a: int) =
-  let (r_f, g_f, b_f, a_f) = rgbIntToFloat(r,g,b,a)
-  strokeColor = (r_f, g_f, b_f, a_f)
+proc stroke*(rh, gs, bv, a: int) =
+  case colorMode:
+  of (RGB):
+    strokeColor = newColorRGB(rh,gs,bv,a)
+  of (HSV):
+    strokeColor = newColorHSV(rh,gs,bv,a)
 
-proc stroke*(gray: int | float) =
-  stroke(gray, gray, gray)
+proc stroke*(h: int, s, b, a: float) =
+  case colorMode:
+  of (RGB):
+    raise newException(ValueError, "r, g, b should have the same type")
+  of (HSV):
+    strokeColor = newColorHSV(h,s,b,a)
+
+proc stroke*(gray: SomeNumber) =
+  case colorMode:
+  of (RGB):
+    stroke(gray, gray, gray)
+  of (HSV):
+    discard # TODO
 
 proc stroke*(hex: string) =
+  if colorMode == HSV:
+    raise newException(ValueError, "Use RGB mode to use hex string")
   let sanitizedHex: string = hex.strip(chars = {'#'} + Whitespace)
   case sanitizedHex.len:
   of 3:
@@ -102,17 +216,52 @@ proc stroke*(hex: string) =
     raise newException(ValueError, "Invalid　hex color")
 
 proc setStrokeColor*() =
-  backend.changeColor(strokeColor[0], strokeColor[1], strokeColor[2], strokeColor[3])
+  case strokeColor.mode:
+  of RGB:
+    backend.changeColor(strokeColor.r, strokeColor.g, strokeColor.b, strokeColor.a)
+  of HSV:
+    let rgb = hsvToRgb(strokeColor)
+    backend.changeColor(rgb.r, rgb.g, rgb.b, rgb.a)
 
 proc setFillColor*() =
-  backend.changeColor(fillColor[0], fillColor[1], fillColor[2], fillColor[3])
+  case fillColor.mode:
+  of RGB:
+    backend.changeColor(fillColor.r, fillColor.g, fillColor.b, fillColor.a)
+  of HSV:
+    let rgb = hsvToRgb(fillColor)
+    backend.changeColor(rgb.r, rgb.g, rgb.b, rgb.a)
 
-proc background*(r,g,b: int) =
-  let (r_f, g_f, b_f) = rgbIntToFloat(r,g,b)
-  backend.background(r_f,g_f,b_f)
-
+proc setBackgroundColor() =
+  case backgroundColor.mode:
+  of RGB:
+    backend.background(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
+  of HSV:
+    let rgb = hsvToRgb(backgroundColor)
+    backend.background(rgb.r, rgb.g, rgb.b, rgb.a)
+  
 proc background*(r,g,b: float) =
-  backend.background(r,g,b)
+  case colorMode:
+  of RGB:
+    backgroundColor = newColorRGB(r,g,b,1.0)
+  of HSV:
+    raise newException(ValueError, "hue should be an integer")
+  setBackgroundColor()
+
+proc background*(rh,gs,bv: int) =
+  case colorMode:
+  of RGB:
+    backgroundColor = newColorRGB(rh,gs,bv,255)
+  of HSV:
+    backgroundColor = newColorHSV(rh,gs,bv,255)
+  setBackgroundColor()
+
+proc background*(h: int,s,v: float) =
+  case colorMode:
+  of RGB:
+    raise newException(ValueError, "r, g, b should have the same type")
+  of HSV:
+    backgroundColor = newColorHSV(h,s,v,255)
+  setBackgroundColor()
 
 proc background*(gray: float | int) =
   background(gray, gray, gray)

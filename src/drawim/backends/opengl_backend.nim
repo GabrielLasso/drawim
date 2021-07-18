@@ -41,8 +41,8 @@ proc drawPath*(vertices: seq[(int, int)]) =
 
   glEnd()
 
-proc background*(r,g,b: float) =
-  glClearColor(r, g, b, 1)
+proc background*(r,g,b,a: float) =
+  glClearColor(r, g, b, a)
   glClear(GL_COLOR_BUFFER_BIT)
 
 let cursorPos: CursorPosFun = proc(window: Window, x, y: cdouble) {.cdecl.} =
