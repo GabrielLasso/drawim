@@ -137,12 +137,8 @@ proc arcFill*(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode = Op
     y = s * t + c * y
   endFilledShape()
 
-proc ellipse*(cx, cy, rx, ry: SomeNumber) =
-  arc(cx,cy,rx,ry,0,2*PI, Chord)
-
-proc ellipseFill*(cx, cy, rx, ry: SomeNumber) =
-  arcFill(cx,cy,rx,ry,0,2*PI, Chord)
-
+proc ellipse*(cx, cy, rx, ry: SomeNumber) = arc(cx,cy,rx,ry,0,2*PI, Chord)
+proc ellipseFill*(cx, cy, rx, ry: SomeNumber) = arcFill(cx,cy,rx,ry,0,2*PI, Chord)
 proc circle*(x, y, r: SomeNumber) = ellipse(x, y, r, r)
 proc circleFill*(x, y, r: SomeNumber) = ellipseFill(x, y, r, r)
 proc square*(x, y, s: SomeNumber) = rect(x, y, s, s)
