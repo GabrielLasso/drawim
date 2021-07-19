@@ -33,10 +33,10 @@ proc endShape*() =
 proc endFilledShape*() =
   let vertices = drawingStack[^1].vertices
   drawingStack.setLen(drawingStack.len - 1)
-  setStrokeColor()
-  backend.drawPolygon(vertices)
   setFillColor()
   backend.drawFilledPolygon(vertices)
+  setStrokeColor()
+  backend.drawPolygon(vertices)
 
 proc endPath*() =
   let vertices = drawingStack[^1].vertices
@@ -84,39 +84,64 @@ proc line*(x1,y1,x2,y2: SomeNumber) =
   vertex(x2, y2)
   endPath()
 
-proc ellipse*(cx, cy, rx, ry: SomeNumber) =
+type ArcMode* = enum Open, Pie, Chord
+
+proc arc*(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode = Open) =
   setStrokeColor()
   const num_segments = 512
-  let theta = 2 * PI / num_segments
+  let theta = (endAngle - beginAngle) / num_segments
   let c = cos(theta)
   let s = sin(theta)
-  var x = 1.0
-  var y = 0.0
+  var x = cos(beginAngle)
+  var y = sin(beginAngle)
 
-  beginShape()
-  for i in 0..<num_segments:
+  case (mode):
+  of Open:
+    beginPath()
+  of Pie:
+    beginShape()
+    vertex(cx, cy)
+  of Chord:
+    beginShape()
+  for i in 0..num_segments:
     vertex(x * float(rx) + float(cx), y * float(ry) + float(cy))
-    let t = x;
-    x = c * x - s * y;
-    y = s * t + c * y;
-  endShape()
+    let t = x
+    x = c * x - s * y
+    y = s * t + c * y
+  case (mode):
+  of Open:
+    endPath()
+  of Pie, Chord:
+    endShape()
 
-proc ellipseFill*(cx, cy, rx, ry: SomeNumber) =
+proc arcFill*(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode = Open) =
   setFillColor()
   const num_segments = 512
-  let theta = 2 * PI / num_segments
+  let theta = (endAngle - beginAngle) / num_segments
   let c = cos(theta)
   let s = sin(theta)
-  var x = 1.0
-  var y = 0.0
+  var x = cos(beginAngle)
+  var y = sin(beginAngle)
 
-  beginFilledShape()
-  for i in 0..<num_segments:
-    vertex(x * float(rx) + float(cx), (y * float(ry) + float(cy)))
-    let t = x;
-    x = c * x - s * y;
-    y = s * t + c * y;
+  case (mode):
+  of Open, Chord:
+    beginFilledShape()
+  of Pie:
+    beginFilledShape()
+    vertex(cx, cy)
+  
+  for i in 0..num_segments:
+    vertex(x * float(rx) + float(cx), y * float(ry) + float(cy))
+    let t = x
+    x = c * x - s * y
+    y = s * t + c * y
   endFilledShape()
+
+proc ellipse*(cx, cy, rx, ry: SomeNumber) =
+  arc(cx,cy,rx,ry,0,2*PI, Chord)
+
+proc ellipseFill*(cx, cy, rx, ry: SomeNumber) =
+  arcFill(cx,cy,rx,ry,0,2*PI, Chord)
 
 proc circle*(x, y, r: SomeNumber) = ellipse(x, y, r, r)
 proc circleFill*(x, y, r: SomeNumber) = ellipseFill(x, y, r, r)

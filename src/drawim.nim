@@ -2,7 +2,9 @@ import times
 import drawim/transform, drawim/shapes, drawim/colors
 when not defined(js):
   import drawim/backends/opengl_backend as backend
+
 type ColorMode* = colors.ColorMode
+type ArcMode* = shapes.ArcMode
 
 var height* = 0
 var width* = 0
@@ -42,6 +44,8 @@ proc rect*(x,y,w,h: SomeNumber) = shapes.rect(x,y,w,h)
 proc rectFill*(x,y,w,h: SomeNumber) = shapes.rectFill(x,y,w,h)
 proc triangle*(x1,y1,x2,y2,x3,y3: SomeNumber) = shapes.triangle(x1,y1,x2,y2,x3,y3)
 proc triangleFill*(x1,y1,x2,y2,x3,y3: SomeNumber) = shapes.triangleFill(x1,y1,x2,y2,x3,y3)
+proc arc*(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode: ArcMode = Open) = shapes.arc(cx, cy, rx, ry, beginAngle, endAngle, mode)
+proc arcFill*(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode: ArcMode = Open) = shapes.arcFill(cx, cy, rx, ry, beginAngle, endAngle, mode)
 proc ellipse*(cx, cy, rx, ry: SomeNumber) = shapes.ellipse(cx, cy, rx, ry)
 proc ellipseFill*(cx, cy, rx, ry: SomeNumber) = shapes.ellipseFill(cx, cy, rx, ry)
 proc circle*(cx, cy, r: SomeNumber) = shapes.circle(cx, cy, r)
