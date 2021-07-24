@@ -4,7 +4,7 @@ when not defined(js):
   import backends/opengl_backend as backend
 
 type
-  DrawKinds = enum Shape, FilledShape, Path
+  DrawKinds = enum Shape, FilledShape, Path, Points
   Draw = object
     vertices: seq[(int, int)]
     drawKind: DrawKinds
@@ -14,6 +14,7 @@ var drawingStack = newSeq[Draw]()
 proc newShape(): Draw = Draw(drawKind: Shape)
 proc newFilledShape(): Draw = Draw(drawKind: FilledShape)
 proc newPath(): Draw = Draw(drawKind: Path)
+proc newPoints(): Draw = Draw(drawKind: Points)
 
 proc beginPath*() =
   drawingStack.add(newPath())
@@ -23,6 +24,9 @@ proc beginShape*() =
 
 proc beginFilledShape*() =
   drawingStack.add(newFilledShape())
+
+proc beginPoints*() =
+  drawingStack.add(newPoints())
 
 proc endShape*() =
   let vertices = drawingStack[^1].vertices
@@ -43,6 +47,12 @@ proc endPath*() =
   drawingStack.setLen(drawingStack.len - 1)
   setStrokeColor()
   backend.drawPath(vertices)
+
+proc endPoints*() =
+  let vertices = drawingStack[^1].vertices
+  drawingStack.setLen(drawingStack.len - 1)
+  setStrokeColor()
+  backend.drawPoints(vertices)
 
 proc vertex*(x,y: SomeNumber) =
   let (realX, realY) = getScreenPosition(x,y)
