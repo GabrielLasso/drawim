@@ -67,11 +67,11 @@ proc run*(w, h: int, draw: proc(), setup: proc() = proc() = discard, name: strin
     resetTransform()
     frameCount += 1
 
-    deltaTime = epochTime() - time
+    time = epochTime()
 
     draw()
 
-    time = epochTime()
+    deltaTime = epochTime() - time
 
     backend.afterDraw()
 
