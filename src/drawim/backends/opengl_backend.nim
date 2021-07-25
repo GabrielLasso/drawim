@@ -41,14 +41,15 @@ proc drawPath*(vertices: seq[(int, int)]) =
 
   glEnd()
 
-proc drawPoints*(vertices: seq[(int, int)]) =
+proc beginPixels*() =
   glBegin(GL_POINTS)
 
-  for (x, y) in vertices:
-    let (glX, glY) = getGlCoords(x,y)
-    glVertex2f(glX, glY)
-
+proc endPixels*() =
   glEnd()
+
+proc setPixel*(x,y:int) =
+  let (glX, glY) = getGlCoords(x,y)
+  glVertex2f(glX, glY)
 
 proc background*(r,g,b,a: float) =
   glClearColor(r, g, b, a)

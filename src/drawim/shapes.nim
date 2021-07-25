@@ -14,7 +14,6 @@ var drawingStack = newSeq[Draw]()
 proc newShape(): Draw = Draw(drawKind: Shape)
 proc newFilledShape(): Draw = Draw(drawKind: FilledShape)
 proc newPath(): Draw = Draw(drawKind: Path)
-proc newPoints(): Draw = Draw(drawKind: Points)
 
 proc beginPath*() =
   drawingStack.add(newPath())
@@ -25,8 +24,8 @@ proc beginShape*() =
 proc beginFilledShape*() =
   drawingStack.add(newFilledShape())
 
-proc beginPoints*() =
-  drawingStack.add(newPoints())
+proc beginPixels*() =
+  backend.beginPixels()
 
 proc endShape*() =
   let vertices = drawingStack[^1].vertices
@@ -48,11 +47,13 @@ proc endPath*() =
   setStrokeColor()
   backend.drawPath(vertices)
 
-proc endPoints*() =
-  let vertices = drawingStack[^1].vertices
-  drawingStack.setLen(drawingStack.len - 1)
+proc endPixels*() =
+  backend.endPixels()
+
+proc setPixel*(x,y: SomeNumber) =
+  let (realX, realY) = getScreenPosition(x,y)
   setStrokeColor()
-  backend.drawPoints(vertices)
+  backend.setPixel(realX, realY)
 
 proc vertex*(x,y: SomeNumber) =
   let (realX, realY) = getScreenPosition(x,y)

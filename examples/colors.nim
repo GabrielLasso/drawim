@@ -4,12 +4,12 @@ proc setup() =
   setColorMode(ColorMode.HSV)
 
 proc draw() =
-  beginPoints()
+  beginPixels()
   for x in 0..<width:
     for y in 0..<height:
       stroke(x*360 div width,y/height,1.0)
-      vertex(x,y)
+      setPixel(x,y)
 
-  endPoints()
+  endPixels()
 
 run(600, 400, draw, setup)
