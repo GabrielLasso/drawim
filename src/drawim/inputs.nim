@@ -138,7 +138,8 @@ const
   MOUSE_BUTTON_RIGHT* = MOUSE_BUTTON_2
   MOUSE_BUTTON_MIDDLE* = MOUSE_BUTTON_3
 
-proc getMousePosition(): (int, int) = transform.getRealPosition(backend.getCursorPos()[0], backend.getCursorPos()[1])
+proc getMousePosition(): (int, int) = transform.getRealPosition(
+    backend.getCursorPos()[0], backend.getCursorPos()[1])
 proc mouseX*(): int = getMousePosition()[0]
 proc mouseY*(): int = getMousePosition()[1]
 proc isKeyPressed*(key: int): bool = backend.isKeyPressed(key)

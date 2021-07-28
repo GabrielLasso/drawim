@@ -3,7 +3,7 @@ import random
 import math
 
 type Particle = object
-  x,y,vx,vy: float
+  x, y, vx, vy: float
 
 randomize()
 
@@ -16,7 +16,8 @@ proc newParticle(): Particle =
 proc update(particle: var Particle) =
   let ox = width / 2
   let oy = height / 2
-  let distSquared = (particle.x - ox) * (particle.x - ox) + (particle.y - oy) * (particle.y - oy)
+  let distSquared = (particle.x - ox) * (particle.x - ox) + (particle.y - oy) *
+      (particle.y - oy)
   let dist = sqrt(distSquared)
   let sinForce = (particle.y - oy) / dist
   let cosForce = (particle.x - ox) / dist
@@ -34,10 +35,10 @@ proc setup() =
   background(255)
 
 proc draw() =
-  fill(255,255,255,1)
+  fill(255, 255, 255, 1)
   noStroke()
-  rectFill(0,0,width,height)
-  stroke(0,0,0,50)
+  rectFill(0, 0, width, height)
+  stroke(0, 0, 0, 50)
   beginPixels()
   for _ in 0..<15: # 15 timesteps per frame
     for i in 0..<particles.len:

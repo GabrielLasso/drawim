@@ -18,7 +18,7 @@ proc drawFilledPolygon*(vertices: seq[(int, int)]) =
   glBegin(GL_POLYGON)
 
   for (x, y) in vertices:
-    let (glX, glY) = getGlCoords(x,y)
+    let (glX, glY) = getGlCoords(x, y)
     glVertex2f(glX, glY)
 
   glEnd()
@@ -27,7 +27,7 @@ proc drawPolygon*(vertices: seq[(int, int)]) =
   glBegin(GL_LINE_LOOP)
 
   for (x, y) in vertices:
-    let (glX, glY) = getGlCoords(x,y)
+    let (glX, glY) = getGlCoords(x, y)
     glVertex2f(glX, glY)
 
   glEnd()
@@ -36,7 +36,7 @@ proc drawPath*(vertices: seq[(int, int)]) =
   glBegin(GL_LINE_STRIP)
 
   for (x, y) in vertices:
-    let (glX, glY) = getGlCoords(x,y)
+    let (glX, glY) = getGlCoords(x, y)
     glVertex2f(glX, glY)
 
   glEnd()
@@ -47,11 +47,11 @@ proc beginPixels*() =
 proc endPixels*() =
   glEnd()
 
-proc setPixel*(x,y:int) =
-  let (glX, glY) = getGlCoords(x,y)
+proc setPixel*(x, y: int) =
+  let (glX, glY) = getGlCoords(x, y)
   glVertex2f(glX, glY)
 
-proc background*(r,g,b,a: float) =
+proc background*(r, g, b, a: float) =
   glClearColor(r, g, b, a)
   glClear(GL_COLOR_BUFFER_BIT)
 
@@ -72,7 +72,7 @@ proc initialize*(name: string, w, h: int) =
     quit("Failed to Initialize GLFW.")
 
   windowHint(RESIZABLE, false.cint)
-  
+
   window = createWindow(cint(w), cint(h), name, nil, nil)
   window_width = w
   window_height = h

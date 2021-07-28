@@ -50,48 +50,48 @@ proc endPath*() =
 proc endPixels*() =
   backend.endPixels()
 
-proc setPixel*(x,y: SomeNumber) =
-  let (realX, realY) = getScreenPosition(x,y)
+proc setPixel*(x, y: SomeNumber) =
+  let (realX, realY) = getScreenPosition(x, y)
   setStrokeColor()
   backend.setPixel(realX, realY)
 
-proc vertex*(x,y: SomeNumber) =
-  let (realX, realY) = getScreenPosition(x,y)
+proc vertex*(x, y: SomeNumber) =
+  let (realX, realY) = getScreenPosition(x, y)
   drawingStack[^1].vertices.add((realX, realY))
 
-proc rect*(x,y,w,h: SomeNumber) =
+proc rect*(x, y, w, h: SomeNumber) =
   beginShape()
-  vertex(x,y)
+  vertex(x, y)
   vertex(x, y+h)
   vertex(x+w, y+h)
   vertex(x+w, y)
   endShape()
 
-proc rectFill*(x,y,w,h: SomeNumber) =
+proc rectFill*(x, y, w, h: SomeNumber) =
   beginFilledShape()
-  vertex(x,y)
+  vertex(x, y)
   vertex(x, y+h)
   vertex(x+w, y+h)
   vertex(x+w, y)
   endFilledShape()
 
-proc triangle*(x1,y1,x2,y2,x3,y3: SomeNumber) =
+proc triangle*(x1, y1, x2, y2, x3, y3: SomeNumber) =
   beginShape()
-  vertex(x1,y1)
+  vertex(x1, y1)
   vertex(x2, y2)
   vertex(x3, y3)
   endShape()
 
-proc triangleFill*(x1,y1,x2,y2,x3,y3: SomeNumber) =
+proc triangleFill*(x1, y1, x2, y2, x3, y3: SomeNumber) =
   beginFilledShape()
-  vertex(x1,y1)
+  vertex(x1, y1)
   vertex(x2, y2)
   vertex(x3, y3)
   endFilledShape()
 
-proc line*(x1,y1,x2,y2: SomeNumber) =
+proc line*(x1, y1, x2, y2: SomeNumber) =
   beginPath()
-  vertex(x1,y1)
+  vertex(x1, y1)
   vertex(x2, y2)
   endPath()
 
@@ -140,7 +140,7 @@ proc arcFill*(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode = Op
   of Pie:
     beginFilledShape()
     vertex(cx, cy)
-  
+
   for i in 0..num_segments:
     vertex(x * float(rx) + float(cx), y * float(ry) + float(cy))
     let t = x
@@ -148,8 +148,8 @@ proc arcFill*(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode = Op
     y = s * t + c * y
   endFilledShape()
 
-proc ellipse*(cx, cy, rx, ry: SomeNumber) = arc(cx,cy,rx,ry,0,2*PI, Chord)
-proc ellipseFill*(cx, cy, rx, ry: SomeNumber) = arcFill(cx,cy,rx,ry,0,2*PI, Chord)
+proc ellipse*(cx, cy, rx, ry: SomeNumber) = arc(cx, cy, rx, ry, 0, 2*PI, Chord)
+proc ellipseFill*(cx, cy, rx, ry: SomeNumber) = arcFill(cx, cy, rx, ry, 0, 2*PI, Chord)
 proc circle*(x, y, r: SomeNumber) = ellipse(x, y, r, r)
 proc circleFill*(x, y, r: SomeNumber) = ellipseFill(x, y, r, r)
 proc square*(x, y, s: SomeNumber) = rect(x, y, s, s)

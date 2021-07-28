@@ -3,22 +3,22 @@ import ../src/drawim
 proc draw() =
   let theta = frameCount / 100
   background(20);
-  translate(int(width / 2),int(height / 2))
+  translate(int(width / 2), int(height / 2))
   # Draw the sun
-  fill(200,200,20)
-  circleFill(0,0,50)
+  fill(200, 200, 20)
+  circleFill(0, 0, 50)
 
   rotate(theta)
-  translate(150,0)
+  translate(150, 0)
   # Draw the earth
-  fill(20,20,200)
-  circleFill(0,0,15)
+  fill(20, 20, 200)
+  circleFill(0, 0, 15)
 
   rotate(theta)
-  translate(40,0)
+  translate(40, 0)
   # Draw the moon
   fill(200)
-  circleFill(0,0,5)
+  circleFill(0, 0, 5)
 
 
 run(600, 400, draw)
