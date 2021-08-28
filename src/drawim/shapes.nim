@@ -2,6 +2,8 @@ import math
 import colors, transform
 when not defined(js):
   import backends/opengl_backend as backend
+when defined(js):
+  import backends/js_backend as backend
 
 type
   DrawKinds = enum Shape, FilledShape, Path, Points

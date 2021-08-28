@@ -1,7 +1,11 @@
 import times
-import drawim/transform, drawim/shapes, drawim/colors
+import drawim/transform, drawim/shapes, drawim/colors, drawim/inputs
 when not defined(js):
   import drawim/backends/opengl_backend as backend
+when defined(js):
+  import drawim/backends/js_backend as backend
+
+include drawim/constants/keycodes
 
 type ColorMode* = colors.ColorMode
 type ArcMode* = shapes.ArcMode
@@ -61,23 +65,25 @@ proc circle*(cx, cy, r: SomeNumber) = shapes.circle(cx, cy, r)
 proc circleFill*(cx, cy, r: SomeNumber) = shapes.circleFill(cx, cy, r)
 proc line*(x1, y1, x2, y2: SomeNumber) = shapes.line(x1, y1, x2, y2)
 
-proc run*(w, h: int, draw: proc(), setup: proc() = proc() = discard,
-    name: string = "Drawim") =
-  backend.initialize(name, w, h)
-  width = w
-  height = h
-  time = epochTime()
+proc mouseX*(): int = inputs.mouseX()
+proc mouseY*(): int = inputs.mouseY()
+proc isKeyPressed*(key: int): bool = inputs.isKeyPressed(key)
+proc isMousePressed*(btn: int): bool = inputs.isMousePressed(btn)
 
-  setup()
-  while backend.isRunning():
+proc drawWrapper(draw: proc()): proc() =
+  return proc() =
     resetTransform()
     frameCount += 1
-
     deltaTime = epochTime() - time
     time = epochTime()
 
     draw()
 
-    backend.afterDraw()
+proc run*(w, h: int, draw: proc(), setup: proc() = proc() = discard,
+    name: string = "Drawim") = 
+  width = w
+  height = h
+  time = epochTime()
 
-  backend.terminate()
+  backend.run(w, h, drawWrapper(draw), setup, name)
+

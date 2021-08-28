@@ -2,7 +2,7 @@ import ../src/drawim
 
 proc draw() =
   let theta = frameCount / 100
-  background(20);
+  background(20)
   translate(int(width / 2), int(height / 2))
   # Draw the sun
   fill(200, 200, 20)

@@ -2,6 +2,8 @@ import strutils
 import math
 when not defined(js):
   import backends/opengl_backend as backend
+when defined(js):
+  import backends/js_backend as backend
 
 type
   ColorMode* = enum RGB, HSV
