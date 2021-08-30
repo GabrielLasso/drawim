@@ -15,18 +15,18 @@ var width* = 0
 var frameCount* = 0
 var time, deltaTime*: float = 0.0
 
-proc background*(r, g, b: int | float) = colors.background(r, g, b)
-proc background*(gray: int | float) = colors.background(gray)
+proc background*(rh, gs, bv: SomeNumber) = colors.background(rh, gs, bv)
+proc background*(gray: SomeNumber) = colors.background(gray)
 
-proc stroke*(r, g, b: int | float) = colors.stroke(r, g, b)
-proc stroke*(r, g, b, a: int | float) = colors.stroke(r, g, b, a)
-proc stroke*(gray: int | float) = colors.stroke(gray)
+proc stroke*(rh, gs, bv: SomeNumber) = colors.stroke(rh, gs, bv)
+proc stroke*(rh, gs, bv, a: SomeNumber) = colors.stroke(rh, gs, bv, a)
+proc stroke*(gray: SomeNumber) = colors.stroke(gray)
 proc stroke*(hex: string) = colors.stroke(hex)
 proc noStroke*() = colors.stroke(0, 0, 0, 0)
 
-proc fill*(r, g, b: int | float) = colors.fill(r, g, b)
-proc fill*(r, g, b, a: int | float) = colors.fill(r, g, b, a)
-proc fill*(gray: int | float) = colors.fill(gray)
+proc fill*(rh, gs, bv: SomeNumber) = colors.fill(rh, gs, bv)
+proc fill*(rh, gs, bv, a: SomeNumber) = colors.fill(rh, gs, bv, a)
+proc fill*(gray: SomeNumber) = colors.fill(gray)
 proc fill*(hex: string) = colors.fill(hex)
 proc noFill*() = colors.fill(0, 0, 0, 0)
 
@@ -41,12 +41,13 @@ proc pop*() = transform.pop()
 proc beginPath*() = shapes.beginPath()
 proc beginShape*() = shapes.beginShape()
 proc beginFilledShape*() = shapes.beginFilledShape()
-proc beginPixels*() = shapes.beginPixels()
 proc endPath*() = shapes.endPath()
 proc endShape*() = shapes.endShape()
 proc endFilledShape*() = shapes.endFilledShape()
-proc endPixels*() = shapes.endPixels()
 proc vertex*(x, y: SomeNumber) = shapes.vertex(x, y)
+
+proc beginPixels*() = shapes.beginPixels()
+proc endPixels*() = shapes.endPixels()
 proc setPixel*(x, y: SomeNumber) = shapes.setPixel(x, y)
 
 proc rect*(x, y, w, h: SomeNumber) = shapes.rect(x, y, w, h)

@@ -17,5 +17,5 @@ run(600, 400, draw)
 
 More examples can be found on `examples/` folder.
 
-## Reference
-[To do]
+## Documentation
+You can find the full docs [here](docs.md)
