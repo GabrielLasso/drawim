@@ -65,6 +65,7 @@ proc ellipseFill*(cx, cy, rx, ry: SomeNumber) = shapes.ellipseFill(cx, cy, rx, r
 proc circle*(cx, cy, r: SomeNumber) = shapes.circle(cx, cy, r)
 proc circleFill*(cx, cy, r: SomeNumber) = shapes.circleFill(cx, cy, r)
 proc line*(x1, y1, x2, y2: SomeNumber) = shapes.line(x1, y1, x2, y2)
+proc bezier*(x1, y1, x2, y2, x3, y3, x4, y4: SomeNumber) = shapes.bezier(x1, y1, x2, y2, x3, y3, x4, y4)
 
 proc mouseX*(): int = inputs.mouseX()
 proc mouseY*(): int = inputs.mouseY()

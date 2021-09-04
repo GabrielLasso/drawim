@@ -150,6 +150,17 @@ proc arcFill*(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode = Op
     y = s * t + c * y
   endFilledShape()
 
+proc bezier*(x1, y1, x2, y2, x3, y3, x4, y4: SomeNumber) =
+  setStrokeColor()
+  const num_segments = 500
+  beginPath()
+  for i in 0..num_segments:
+    let t = i / num_segments
+    let x = (1-t)*(1-t)*(1-t)*float(x1) + 3*(1-t)*(1-t)*t*float(x2) + 3*(1-t)*t*t*float(x3) + t*t*t*float(x4)
+    let y = (1-t)*(1-t)*(1-t)*float(y1) + 3*(1-t)*(1-t)*t*float(y2) + 3*(1-t)*t*t*float(y3) + t*t*t*float(y4)
+    vertex(x,y)
+  endPath()
+
 proc ellipse*(cx, cy, rx, ry: SomeNumber) = arc(cx, cy, rx, ry, 0, 2*PI, Chord)
 proc ellipseFill*(cx, cy, rx, ry: SomeNumber) = arcFill(cx, cy, rx, ry, 0, 2*PI, Chord)
 proc circle*(x, y, r: SomeNumber) = ellipse(x, y, r, r)
