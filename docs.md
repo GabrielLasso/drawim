@@ -54,6 +54,7 @@ proc ellipseFill(cx, cy, rx, ry: SomeNumber)
 proc circle(cx, cy, r: SomeNumber)
 proc circleFill(cx, cy, r: SomeNumber)
 proc line(x1, y1, x2, y2: SomeNumber)
+proc bezier(x1, y1, x2, y2, x3, y3, x4, y4: SomeNumber)
 ```
 
 To draw more complex shapes, call `vertex` between `beginShape` and `endShape` (the same for `beginPath` and `beginFilledShape`): 
