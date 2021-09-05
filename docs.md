@@ -13,7 +13,7 @@ There are two color modes, `ColorMode.RGB` and `ColorMode.HSV`. You can set one 
 
 In `RGB` mode, the values goes from `0` to `255` when a `int` is used, or from `0.0` to `1.0` when `float` is used.
 
-In `HSV` mode, the hue value must be an integer from `0` to `359` degrees, and the saturation and value can be either an integer from `0` to `255` or a floating point from `0.0` to `1.0`.
+In `HSV` mode, the hue value must be an integer from `0` to `359` degrees, and the saturation and value can be either an integer from `0` to `100` or a floating point from `0.0` to `1.0`.
 
 Both modes also suport an alpha value from `0` to `255` or from `0.0` to `1.0`.
 
