@@ -101,7 +101,7 @@ proc fill*(h: int, s, b, a: float) =
   of (HSV):
     fillColor = newColorHSV(h, s, b, a)
 
-proc fill*(gray: SomeNumber) =
+proc fill*(gray: int|float) =
   case colorMode:
   of (RGB):
     fill(gray, gray, gray)
@@ -180,7 +180,7 @@ proc stroke*(h: int, s, b, a: float) =
   of (HSV):
     strokeColor = newColorHSV(h, s, b, a)
 
-proc stroke*(gray: SomeNumber) =
+proc stroke*(gray: int|float) =
   case colorMode:
   of (RGB):
     stroke(gray, gray, gray)
