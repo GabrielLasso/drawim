@@ -34,8 +34,8 @@ proc fill(gray: int | float) # Set the fill color in gray scale
 proc fill(hex: string) # Set the fill color using the hexadecimal string
 proc noFill() # Set the fill color as transparent
 
-proc background(rh, gs, bv: SomeNumber) # Fill the screen using the current color mode
-proc background(gray: SomeNumber) # Fill the screen in gray scale
+proc background(rh, gs, bv: int|float) # Fill the screen using the current color mode
+proc background(gray: int|float) # Fill the screen in gray scale
 
 proc setColorMode(mode: ColorMode) # Set the color mode
 ```
@@ -43,18 +43,18 @@ proc setColorMode(mode: ColorMode) # Set the color mode
 ## Shapes
 Basic shapes:
 ```nim
-proc rect(x, y, w, h: SomeNumber)
-proc rectFill(x, y, w, h: SomeNumber)
-proc triangle(x1, y1, x2, y2, x3, y3: SomeNumber)
-proc triangleFill(x1, y1, x2, y2, x3, y3: SomeNumber)
-proc arc(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode: ArcMode = Open)
-proc arcFill(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode: ArcMode = Open)
-proc ellipse(cx, cy, rx, ry: SomeNumber)
-proc ellipseFill(cx, cy, rx, ry: SomeNumber)
-proc circle(cx, cy, r: SomeNumber)
-proc circleFill(cx, cy, r: SomeNumber)
-proc line(x1, y1, x2, y2: SomeNumber)
-proc bezier(x1, y1, x2, y2, x3, y3, x4, y4: SomeNumber)
+proc rect(x, y, w, h: int|float)
+proc rectFill(x, y, w, h: int|float)
+proc triangle(x1, y1, x2, y2, x3, y3: int|float)
+proc triangleFill(x1, y1, x2, y2, x3, y3: int|float)
+proc arc(cx, cy, rx, ry: int|float, beginAngle, endAngle: float, mode: ArcMode = Open)
+proc arcFill(cx, cy, rx, ry: int|float, beginAngle, endAngle: float, mode: ArcMode = Open)
+proc ellipse(cx, cy, rx, ry: int|float)
+proc ellipseFill(cx, cy, rx, ry: int|float)
+proc circle(cx, cy, r: int|float)
+proc circleFill(cx, cy, r: int|float)
+proc line(x1, y1, x2, y2: int|float)
+proc bezier(x1, y1, x2, y2, x3, y3, x4, y4: int|float)
 ```
 
 To draw more complex shapes, call `vertex` between `beginShape` and `endShape` (the same for `beginPath` and `beginFilledShape`): 
@@ -65,22 +65,22 @@ proc beginFilledShape()
 proc endPath()
 proc endShape()
 proc endFilledShape()
-proc vertex(x, y: SomeNumber)
+proc vertex(x, y: int|float)
 ```
 
 To set individual pixels to the stroke color, call `setPixel` between `beginPixels` and `endPixels`:
 ```nim
 proc beginPixels()
 proc endPixels()
-proc setPixel(x, y: SomeNumber)
+proc setPixel(x, y: int|float)
 ```
 
 ## Transform
 These are the three basic transform operations:
 ```nim
-proc rotate(theta: SomeNumber)
-proc translate(x, y: SomeNumber)
-proc scale(x, y: SomeNumber)
+proc rotate(theta: int|float)
+proc translate(x, y: int|float)
+proc scale(x, y: int|float)
 ```
 
 You can mix these operations, as well as save the transform state in a stack, to push and pop transforms:

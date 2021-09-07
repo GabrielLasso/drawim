@@ -27,7 +27,7 @@ func `*`(A: Transformation, B: Transformation): Transformation =
         0]*B[0][2] + A[1][1]*B[1][2] + A[1][2])
   )
 
-proc rotate*(theta: SomeNumber) =
+proc rotate*(theta: int|float) =
   let rotation = (
     (cos(theta), sin(theta), 0.0),
     (-sin(theta), cos(theta), 0.0)
@@ -39,7 +39,7 @@ proc rotate*(theta: SomeNumber) =
   matrix = matrix * rotation
   reverse_matrix = reverse_matrix * reverse_rotation
 
-proc translate*(x, y: SomeNumber) =
+proc translate*(x, y: int|float) =
   let tranlation = (
     (1.0, 0.0, float(x)),
     (0.0, 1.0, float(y))
@@ -51,7 +51,7 @@ proc translate*(x, y: SomeNumber) =
   matrix = matrix * tranlation
   reverse_matrix = reverse_matrix * reverse_translation
 
-proc scale*(x, y: SomeNumber) =
+proc scale*(x, y: int|float) =
   let scale = (
     (float(x), 0.0, 0.0),
     (0.0, float(y), 0.0)
@@ -81,7 +81,7 @@ proc resetTransform*() =
     (0.0, 1.0, 0.0)
   )
 
-proc getScreenPosition*(x, y: SomeNumber): (int, int) =
+proc getScreenPosition*(x, y: int|float): (int, int) =
   let (x_res, y_res) = (float(x), float(y)) * matrix
   result = (int(x_res), int(y_res))
 

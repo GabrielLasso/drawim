@@ -52,16 +52,16 @@ proc endPath*() =
 proc endPixels*() =
   backend.endPixels()
 
-proc setPixel*(x, y: SomeNumber) =
+proc setPixel*(x, y: int|float) =
   let (realX, realY) = getScreenPosition(x, y)
   setStrokeColor()
   backend.setPixel(realX, realY)
 
-proc vertex*(x, y: SomeNumber) =
+proc vertex*(x, y: int|float) =
   let (realX, realY) = getScreenPosition(x, y)
   drawingStack[^1].vertices.add((realX, realY))
 
-proc rect*(x, y, w, h: SomeNumber) =
+proc rect*(x, y, w, h: int|float) =
   beginShape()
   vertex(x, y)
   vertex(x, y+h)
@@ -69,7 +69,7 @@ proc rect*(x, y, w, h: SomeNumber) =
   vertex(x+w, y)
   endShape()
 
-proc rectFill*(x, y, w, h: SomeNumber) =
+proc rectFill*(x, y, w, h: int|float) =
   beginFilledShape()
   vertex(x, y)
   vertex(x, y+h)
@@ -77,21 +77,21 @@ proc rectFill*(x, y, w, h: SomeNumber) =
   vertex(x+w, y)
   endFilledShape()
 
-proc triangle*(x1, y1, x2, y2, x3, y3: SomeNumber) =
+proc triangle*(x1, y1, x2, y2, x3, y3: int|float) =
   beginShape()
   vertex(x1, y1)
   vertex(x2, y2)
   vertex(x3, y3)
   endShape()
 
-proc triangleFill*(x1, y1, x2, y2, x3, y3: SomeNumber) =
+proc triangleFill*(x1, y1, x2, y2, x3, y3: int|float) =
   beginFilledShape()
   vertex(x1, y1)
   vertex(x2, y2)
   vertex(x3, y3)
   endFilledShape()
 
-proc line*(x1, y1, x2, y2: SomeNumber) =
+proc line*(x1, y1, x2, y2: int|float) =
   beginPath()
   vertex(x1, y1)
   vertex(x2, y2)
@@ -99,7 +99,7 @@ proc line*(x1, y1, x2, y2: SomeNumber) =
 
 type ArcMode* = enum Open, Pie, Chord
 
-proc arc*(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode = Open) =
+proc arc*(cx, cy, rx, ry: int|float, beginAngle, endAngle: float, mode = Open) =
   setStrokeColor()
   const num_segments = 512
   let theta = (endAngle - beginAngle) / num_segments
@@ -127,7 +127,7 @@ proc arc*(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode = Open) 
   of Pie, Chord:
     endShape()
 
-proc arcFill*(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode = Open) =
+proc arcFill*(cx, cy, rx, ry: int|float, beginAngle, endAngle: float, mode = Open) =
   setFillColor()
   const num_segments = 512
   let theta = (endAngle - beginAngle) / num_segments
@@ -150,7 +150,7 @@ proc arcFill*(cx, cy, rx, ry: SomeNumber, beginAngle, endAngle: float, mode = Op
     y = s * t + c * y
   endFilledShape()
 
-proc bezier*(x1, y1, x2, y2, x3, y3, x4, y4: SomeNumber) =
+proc bezier*(x1, y1, x2, y2, x3, y3, x4, y4: int|float) =
   setStrokeColor()
   const num_segments = 500
   beginPath()
@@ -161,9 +161,9 @@ proc bezier*(x1, y1, x2, y2, x3, y3, x4, y4: SomeNumber) =
     vertex(x,y)
   endPath()
 
-proc ellipse*(cx, cy, rx, ry: SomeNumber) = arc(cx, cy, rx, ry, 0, 2*PI, Chord)
-proc ellipseFill*(cx, cy, rx, ry: SomeNumber) = arcFill(cx, cy, rx, ry, 0, 2*PI, Chord)
-proc circle*(x, y, r: SomeNumber) = ellipse(x, y, r, r)
-proc circleFill*(x, y, r: SomeNumber) = ellipseFill(x, y, r, r)
-proc square*(x, y, s: SomeNumber) = rect(x, y, s, s)
-proc squareFill*(x, y, s: SomeNumber) = rectFill(x, y, s, s)
+proc ellipse*(cx, cy, rx, ry: int|float) = arc(cx, cy, rx, ry, 0, 2*PI, Chord)
+proc ellipseFill*(cx, cy, rx, ry: int|float) = arcFill(cx, cy, rx, ry, 0, 2*PI, Chord)
+proc circle*(x, y, r: int|float) = ellipse(x, y, r, r)
+proc circleFill*(x, y, r: int|float) = ellipseFill(x, y, r, r)
+proc square*(x, y, s: int|float) = rect(x, y, s, s)
+proc squareFill*(x, y, s: int|float) = rectFill(x, y, s, s)
