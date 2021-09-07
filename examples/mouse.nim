@@ -1,5 +1,4 @@
-import ../src/drawim
-import ../src/drawim/inputs
+import drawim
 
 proc setup() =
   background(220)

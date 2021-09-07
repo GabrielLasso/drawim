@@ -1,4 +1,4 @@
-import ../../src/drawim
+import drawim
 
 proc setup() =
   background(220)

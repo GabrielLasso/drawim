@@ -1,5 +1,4 @@
-import ../src/drawim
-import ../src/drawim/inputs
+import drawim
 import math
 
 proc hilbert_curve(x1, y1, x2, y2, x3, y3, x4, y4: int, max_depth = 6) =

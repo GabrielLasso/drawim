@@ -1,4 +1,4 @@
-import ../src/drawim
+import drawim
 
 proc draw() =
   let theta = frameCount / 100

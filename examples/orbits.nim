@@ -1,4 +1,4 @@
-import ../src/drawim
+import drawim
 import random
 import math
 
