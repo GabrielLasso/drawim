@@ -1,11 +1,13 @@
 # Documentation
 
-## Global variables
+## general
 ```nim
 var height: int
 var width: int
 var frameCount: int
 var deltaTime: float
+
+proc setFrameRate(frameRate: int)
 ```
 
 ## Colors
