@@ -33,4 +33,3 @@ proc dead*(snake: Snake): bool =
   for position in snake.tail:
     if snake.position == position:
       return true
-  

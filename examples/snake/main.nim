@@ -1,8 +1,4 @@
-import drawim
-
-import snake
-import food
-import config
+import config, drawim, food, snake
 
 var player: Snake = initSnake(5, 5)
 var nextFood: Food = initFood()
