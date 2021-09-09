@@ -1,12 +1,13 @@
-import math
-import colors, transform
-when not defined(js):
-  import backends/opengl_backend as backend
+import std/math, colors, transform
+
 when defined(js):
   import backends/js_backend as backend
+else:
+  import backends/opengl_backend as backend
 
 type
-  DrawKinds = enum Shape, FilledShape, Path, Points
+  DrawKinds = enum
+    Shape, FilledShape, Path, Points
   Draw = object
     vertices: seq[(int, int)]
     drawKind: DrawKinds
@@ -108,7 +109,7 @@ proc arc*(cx, cy, rx, ry: int|float, beginAngle, endAngle: float, mode = Open) =
   var x = cos(beginAngle)
   var y = sin(beginAngle)
 
-  case (mode):
+  case mode:
   of Open:
     beginPath()
   of Pie:
@@ -121,7 +122,7 @@ proc arc*(cx, cy, rx, ry: int|float, beginAngle, endAngle: float, mode = Open) =
     let t = x
     x = c * x - s * y
     y = s * t + c * y
-  case (mode):
+  case mode:
   of Open:
     endPath()
   of Pie, Chord:
@@ -161,8 +162,8 @@ proc bezier*(x1, y1, x2, y2, x3, y3, x4, y4: int|float) =
     vertex(x,y)
   endPath()
 
-proc ellipse*(cx, cy, rx, ry: int|float) = arc(cx, cy, rx, ry, 0, 2*PI, Chord)
-proc ellipseFill*(cx, cy, rx, ry: int|float) = arcFill(cx, cy, rx, ry, 0, 2*PI, Chord)
+proc ellipse*(cx, cy, rx, ry: int|float) = arc(cx, cy, rx, ry, 0, 2*Pi, Chord)
+proc ellipseFill*(cx, cy, rx, ry: int|float) = arcFill(cx, cy, rx, ry, 0, 2*Pi, Chord)
 proc circle*(x, y, r: int|float) = ellipse(x, y, r, r)
 proc circleFill*(x, y, r: int|float) = ellipseFill(x, y, r, r)
 proc square*(x, y, s: int|float) = rect(x, y, s, s)
