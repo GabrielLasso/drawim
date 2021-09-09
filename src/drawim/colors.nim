@@ -102,11 +102,7 @@ proc fill*(h: int, s, b, a: float) =
     fillColor = newColorHSV(h, s, b, a)
 
 proc fill*(gray: int|float) =
-  case colorMode:
-  of (RGB):
-    fill(gray, gray, gray)
-  of (HSV):
-    discard # TODO
+  fillColor = newColorRGB(gray, gray, gray, 255)
 
 proc fill*(hex: string) =
   if colorMode == HSV:
@@ -181,11 +177,7 @@ proc stroke*(h: int, s, b, a: float) =
     strokeColor = newColorHSV(h, s, b, a)
 
 proc stroke*(gray: int|float) =
-  case colorMode:
-  of (RGB):
-    stroke(gray, gray, gray)
-  of (HSV):
-    discard # TODO
+  strokeColor = newColorRGB(gray, gray, gray, 255)
 
 proc stroke*(hex: string) =
   if colorMode == HSV:
