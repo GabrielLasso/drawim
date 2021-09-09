@@ -1,9 +1,8 @@
-import drawim
-import random
-import math
+import drawim, std/[random, math]
 
-type Particle = object
-  x, y, vx, vy: float
+type
+  Particle = object
+    x, y, vx, vy: float
 
 randomize()
 

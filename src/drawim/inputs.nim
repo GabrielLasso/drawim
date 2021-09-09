@@ -1,8 +1,9 @@
 import transform
-when not defined(js):
-  import backends/opengl_backend as backend
+
 when defined(js):
   import backends/js_backend as backend
+else:
+  import backends/opengl_backend as backend
 
 proc getMousePosition(): (int, int) = transform.getRealPosition(
     backend.getCursorPos()[0], backend.getCursorPos()[1])

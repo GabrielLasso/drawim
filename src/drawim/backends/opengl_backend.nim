@@ -5,23 +5,6 @@ var window_height: int
 var window: Window
 var mouseX, mouseY: int
 
-proc drawFilledPolygon*(vertices: seq[(int, int)])
-proc drawPolygon*(vertices: seq[(int, int)])
-proc drawPath*(vertices: seq[(int, int)])
-
-proc beginPixels*()
-proc endPixels*()
-proc setPixel*(x, y: int)
-
-proc background*(r, g, b, a: float)
-proc changeColor*(r, g, b, a: float)
-
-proc getCursorPos*(): (int, int)
-proc isKeyPressed*(key: int): bool
-proc isMousePressed*(btn: int): bool
-
-proc run*(w, h: int, draw: proc(), setup: proc(), name: string)
-
 # Maps (0,0) to (-1, 1) and (window_width, window_height) to (1, -1)
 proc getGlCoords(x, y: int): (float, float) =
   let new_x = 2 * (float(x) - window_width/2)/float(window_width)
@@ -30,29 +13,23 @@ proc getGlCoords(x, y: int): (float, float) =
 
 proc drawFilledPolygon*(vertices: seq[(int, int)]) =
   glBegin(GL_POLYGON)
-
   for (x, y) in vertices:
     let (glX, glY) = getGlCoords(x, y)
     glVertex2f(glX, glY)
-
   glEnd()
 
 proc drawPolygon*(vertices: seq[(int, int)]) =
   glBegin(GL_LINE_LOOP)
-
   for (x, y) in vertices:
     let (glX, glY) = getGlCoords(x, y)
     glVertex2f(glX, glY)
-
   glEnd()
 
 proc drawPath*(vertices: seq[(int, int)]) =
   glBegin(GL_LINE_STRIP)
-
   for (x, y) in vertices:
     let (glX, glY) = getGlCoords(x, y)
     glVertex2f(glX, glY)
-
   glEnd()
 
 proc beginPixels*() =

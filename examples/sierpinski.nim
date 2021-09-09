@@ -1,5 +1,4 @@
-import drawim
-import math
+import drawim, std/math
 
 proc sierpinski(x1, y1, x2, y2, x3, y3: float) =
   if ((abs(x1 - x2) < 3 and abs(y1 - y2) < 3) or
@@ -17,6 +16,5 @@ proc draw() =
   rotate(PI)
 
   sierpinski(0.0, 100.0, 86.0, -50.0, -86.0, -50.0)
-
 
 run(600, 400, draw)
