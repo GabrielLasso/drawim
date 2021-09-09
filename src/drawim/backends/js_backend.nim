@@ -32,6 +32,8 @@ var mouseX, mouseY: int
 var keys: array[256, bool]
 var mouseButtons: array[8, bool]
 
+var frameRate = 60
+
 proc drawFilledPolygon*(vertices: seq[(int, int)]) =
     context.fillStyle = &"rgb({fillColor[0]}, {fillColor[1]}, {fillColor[2]}, {fillColor[3]})"
     context.beginPath()
@@ -110,6 +112,9 @@ proc isKeyPressed*(key: int): bool =
 proc isMousePressed*(btn: int): bool = 
     mouseButtons[btn]
 
+proc setFrameRate*(newFrameRate: int) =
+    frameRate = newFrameRate
+
 proc initialize*(name: string, w, h: int) =
     window.onload = proc(e: Event) =
         let root = document.getElementById(name)
@@ -124,6 +129,6 @@ proc run*(w, h: int, draw: proc(), setup: proc(), name: string) =
   discard setTimeout(setup, 0)
   var recursion: proc()
   recursion = proc() =
-    discard setTimeout(recursion, int(1000/60))
+    discard setTimeout(recursion, 1000 div frameRate)
     discard setTimeout(draw, 0)
   discard setTimeout(recursion, 0)

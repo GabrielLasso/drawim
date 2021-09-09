@@ -1,9 +1,12 @@
-import opengl, staticglfw
+import opengl, staticglfw, std/times, std/os
 
 var window_width: int
 var window_height: int
 var window: Window
 var mouseX, mouseY: int
+
+var frameRate = 60
+var lastTime: float
 
 proc drawFilledPolygon*(vertices: seq[(int, int)])
 proc drawPolygon*(vertices: seq[(int, int)])
@@ -84,6 +87,9 @@ proc isKeyPressed*(key: int): bool =
 proc isMousePressed*(btn: int): bool =
   result = window.getMouseButton(cint(btn)) == 1
 
+proc setFrameRate*(newFrameRate: int) =
+  frameRate = newFrameRate
+
 proc initialize(name: string, w, h: int) =
   if init() == 0:
     quit("Failed to Initialize GLFW.")
@@ -100,6 +106,7 @@ proc initialize(name: string, w, h: int) =
   loadExtensions()
   glEnable(GL_BLEND)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+  lastTime = epochTime()
 
 proc afterDraw() =
   window.swapBuffers()
@@ -107,6 +114,9 @@ proc afterDraw() =
   glDrawBuffer(GL_BACK)
   glCopyPixels(0, 0, GLsizei(window_width), GLsizei(window_height), GL_COLOR)
   pollEvents()
+  while epochTime() - lastTime < 1 / frameRate:
+    os.sleep(1)
+  lastTime = epochTime()
 
 proc terminate() =
   window.destroyWindow()

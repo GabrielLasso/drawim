@@ -18,6 +18,8 @@ export transform except resetTransform, getScreenPosition, getRealPosition
 proc noStroke*() = colors.stroke(0, 0, 0, 0)
 proc noFill*() = colors.fill(0, 0, 0, 0)
 
+proc setFrameRate*(frameRate: int) = backend.setFrameRate(frameRate)
+
 proc drawWrapper(draw: proc()): proc() =
   return proc() =
     resetTransform()
