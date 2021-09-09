@@ -1,14 +1,15 @@
-import strutils
-import math
-when not defined(js):
-  import backends/opengl_backend as backend
+import std/[math, strutils]
+
 when defined(js):
   import backends/js_backend as backend
+else:
+  import backends/opengl_backend as backend
 
 type
-  ColorMode* = enum RGB, HSV
+  ColorMode* = enum
+    RGB, HSV
   Color = object
-    case mode: ColorMode:
+    case mode: ColorMode
     of RGB:
       r, g, b: float
     of HSV:
@@ -61,51 +62,51 @@ proc hsvToRgb(color: Color): Color =
 
 proc fill*(r, g, b: float) =
   case colorMode:
-  of (RGB):
+  of RGB:
     fillColor = newColorRGB(r, g, b, 1.0)
-  of (HSV):
+  of HSV:
     raise newException(ValueError, "hue should be an integer")
 
 proc fill*(rh, gs, bv: int) =
   case colorMode:
-  of (RGB):
+  of RGB:
     fillColor = newColorRGB(rh, gs, bv, 255)
-  of (HSV):
+  of HSV:
     fillColor = newColorHSV(rh, gs, bv, 255)
 
 proc fill*(h: int, s, b: float) =
   case colorMode:
-  of (RGB):
+  of RGB:
     raise newException(ValueError, "r, g, b should have the same type")
-  of (HSV):
+  of HSV:
     fillColor = newColorHSV(h, s, b, 1.0)
 
 proc fill*(r, g, b, a: float) =
   case colorMode:
-  of (RGB):
+  of RGB:
     fillColor = newColorRGB(r, g, b, a)
-  of (HSV):
+  of HSV:
     raise newException(ValueError, "hue should be an integer")
 
 proc fill*(rh, gs, bv, a: int) =
   case colorMode:
-  of (RGB):
+  of RGB:
     fillColor = newColorRGB(rh, gs, bv, a)
-  of (HSV):
+  of HSV:
     fillColor = newColorHSV(rh, gs, bv, a)
 
 proc fill*(h: int, s, b, a: float) =
   case colorMode:
-  of (RGB):
+  of RGB:
     raise newException(ValueError, "r, g, b should have the same type")
-  of (HSV):
+  of HSV:
     fillColor = newColorHSV(h, s, b, a)
 
 proc fill*(gray: int|float) =
   case colorMode:
-  of (RGB):
+  of RGB:
     fill(gray, gray, gray)
-  of (HSV):
+  of HSV:
     discard # TODO
 
 proc fill*(hex: string) =
@@ -138,53 +139,55 @@ proc fill*(hex: string) =
   else:
     raise newException(ValueError, "Invalid　hex color")
 
+proc noFill*() = fill(0, 0, 0, 0)
+
 proc stroke*(r, g, b: float) =
   case colorMode:
-  of (RGB):
+  of RGB:
     strokeColor = newColorRGB(r, g, b, 1.0)
-  of (HSV):
+  of HSV:
     raise newException(ValueError, "hue should be an integer")
 
 proc stroke*(rh, gs, bv: int) =
   case colorMode:
-  of (RGB):
+  of RGB:
     strokeColor = newColorRGB(rh, gs, bv, 255)
-  of (HSV):
+  of HSV:
     strokeColor = newColorHSV(rh, gs, bv, 255)
 
 proc stroke*(h: int, s, b: float) =
   case colorMode:
-  of (RGB):
+  of RGB:
     raise newException(ValueError, "r, g, b should have the same type")
-  of (HSV):
+  of HSV:
     strokeColor = newColorHSV(h, s, b, 1.0)
 
 proc stroke*(r, g, b, a: float) =
   case colorMode:
-  of (RGB):
+  of RGB:
     strokeColor = newColorRGB(r, g, b, a)
-  of (HSV):
+  of HSV:
     raise newException(ValueError, "hue should be an integer")
 
 proc stroke*(rh, gs, bv, a: int) =
   case colorMode:
-  of (RGB):
+  of RGB:
     strokeColor = newColorRGB(rh, gs, bv, a)
-  of (HSV):
+  of HSV:
     strokeColor = newColorHSV(rh, gs, bv, a)
 
 proc stroke*(h: int, s, b, a: float) =
   case colorMode:
-  of (RGB):
+  of RGB:
     raise newException(ValueError, "r, g, b should have the same type")
-  of (HSV):
+  of HSV:
     strokeColor = newColorHSV(h, s, b, a)
 
 proc stroke*(gray: int|float) =
   case colorMode:
-  of (RGB):
+  of RGB:
     stroke(gray, gray, gray)
-  of (HSV):
+  of HSV:
     discard # TODO
 
 proc stroke*(hex: string) =
@@ -216,6 +219,8 @@ proc stroke*(hex: string) =
     stroke(r, g, b, a)
   else:
     raise newException(ValueError, "Invalid　hex color")
+
+proc noStroke*() = stroke(0, 0, 0, 0)
 
 proc setStrokeColor*() =
   case strokeColor.mode:

@@ -1,8 +1,9 @@
-import math
+import std/math
 
 type
   Transformation = ((float, float, float), (float, float, float))
   Vector2D = (float, float)
+
 var matrix = (
   (1.0, 0.0, 0.0),
   (0.0, 1.0, 0.0),

@@ -3,7 +3,7 @@ import drawim
 proc draw() =
   let theta = frameCount / 100
   background(20)
-  translate(int(width / 2), int(height / 2))
+  translate(width div 2, height div 2)
   # Draw the sun
   fill(200, 200, 20)
   circleFill(0, 0, 50)
@@ -19,6 +19,5 @@ proc draw() =
   # Draw the moon
   fill(200)
   circleFill(0, 0, 5)
-
 
 run(600, 400, draw)

@@ -1,5 +1,4 @@
-import drawim
-import math
+import drawim, std/math
 
 proc branch(len: int) =
   if (len < 1):
