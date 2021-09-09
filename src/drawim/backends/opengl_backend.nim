@@ -1,4 +1,4 @@
-import opengl, staticglfw, std/times, std/os
+import opengl, staticglfw, std/[times, os]
 
 var window_width: int
 var window_height: int

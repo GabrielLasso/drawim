@@ -1,5 +1,4 @@
-import random
-import drawim
+import drawim, std/random
 
 import config
 

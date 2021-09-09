@@ -1,7 +1,4 @@
-import drawim
-import deques
-
-import config
+import std/deques, drawim, config
 
 type
   Snake* = object
