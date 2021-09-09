@@ -15,6 +15,8 @@ var width* = 0
 var frameCount* = 0
 var time, deltaTime*: float = 0.0
 
+proc setFrameRate*(frameRate: int) = backend.setFrameRate(frameRate)
+
 proc drawWrapper(draw: proc()): proc() =
   return proc() =
     resetTransform()
