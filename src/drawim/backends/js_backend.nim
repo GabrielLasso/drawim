@@ -37,7 +37,6 @@ proc drawPath*(vertices: seq[(int, int)]) =
   context.strokeStyle = fmt"rgb({strokeColor[0]}, {strokeColor[1]}, {strokeColor[2]}, {strokeColor[3]})"
   context.beginPath()
   for (x, y) in vertices:
-    context.moveTo(x, y)
     context.lineTo(x, y)
   context.stroke()
 
