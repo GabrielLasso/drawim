@@ -26,5 +26,22 @@ Just install with numble by running
 nimble install drawim
 ```
 
+## Features
+- Compiles to native and JS
+- 100% Nim code
+- Basic drawing
+- Read keyboard and mouse input
+- Limit the framerate
+- Rotate, translate and scale
+- Save transform state in a stack (see examples/tree.nim)
+- RGB and HSV colors
+- Bezier curves
+- Easy to extend and create new curves
+
+To do:
+- Stroke weight
+- Load sprites
+- Spritemaps
+
 ## Documentation
 You can find the full docs [here](docs.md)
