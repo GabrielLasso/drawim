@@ -151,15 +151,20 @@ proc arcFill*(cx, cy, rx, ry: int|float, beginAngle, endAngle: float, mode = Ope
     y = s * t + c * y
   endFilledShape()
 
-proc bezier*(x1, y1, x2, y2, x3, y3, x4, y4: int|float) =
-  setStrokeColor()
+proc bezierVertex*(x1, y1, x2, y2, x3, y3: int|float) =
+  let (x0, y0) = drawingStack[^1].vertices[^1]
   const num_segments = 500
-  beginPath()
   for i in 0..num_segments:
     let t = i / num_segments
-    let x = (1-t)*(1-t)*(1-t)*float(x1) + 3*(1-t)*(1-t)*t*float(x2) + 3*(1-t)*t*t*float(x3) + t*t*t*float(x4)
-    let y = (1-t)*(1-t)*(1-t)*float(y1) + 3*(1-t)*(1-t)*t*float(y2) + 3*(1-t)*t*t*float(y3) + t*t*t*float(y4)
+    let x = (1-t)*(1-t)*(1-t)*float(x0) + 3*(1-t)*(1-t)*t*float(x1) + 3*(1-t)*t*t*float(x2) + t*t*t*float(x3)
+    let y = (1-t)*(1-t)*(1-t)*float(y0) + 3*(1-t)*(1-t)*t*float(y1) + 3*(1-t)*t*t*float(y2) + t*t*t*float(y3)
     vertex(x,y)
+
+proc bezier*(x1, y1, x2, y2, x3, y3, x4, y4: int|float) =
+  setStrokeColor()
+  beginPath()
+  vertex(x1, y1)
+  bezierVertex(x2, y2, x3, y3, x4, y4)
   endPath()
 
 proc ellipse*(cx, cy, rx, ry: int|float) = arc(cx, cy, rx, ry, 0, 2*Pi, Chord)
