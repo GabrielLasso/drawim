@@ -68,6 +68,7 @@ proc endPath()
 proc endShape()
 proc endFilledShape()
 proc vertex(x, y: int|float)
+proc bezierVertex(x1, y1, x2, y2, x3, y3: int|float)
 ```
 
 To set individual pixels to the stroke color, call `setPixel` between `beginPixels` and `endPixels`:
