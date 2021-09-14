@@ -40,8 +40,8 @@ nimble install drawim
 
 To do:
 - Stroke weight
-- Load sprites
-- Spritemaps
+- Sprites
+- Fonts
 
 ## Documentation
 You can find the full docs [here](docs.md)
