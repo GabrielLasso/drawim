@@ -1,4 +1,4 @@
-import opengl, staticglfw, std/[times, os], tables, ../constants/keycodes, sequtils
+import opengl, staticglfw, std/[times, os], tables, sequtils
 
 var window_width: int
 var window_height: int

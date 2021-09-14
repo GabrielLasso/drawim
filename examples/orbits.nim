@@ -28,6 +28,7 @@ proc update(particle: var Particle) =
 var particles: seq[Particle]
 
 proc setup() =
+  setFrameRate(1000)
   particles = newSeq[Particle](5000)
   for i in 0..<particles.len:
     particles[i] = newParticle()

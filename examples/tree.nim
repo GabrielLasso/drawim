@@ -7,13 +7,13 @@ proc branch(len: int) =
 
   push()
   translate(0, len)
-  rotate(PI / 6)
+  rotate(PI / 5)
   branch(int(float(len)*0.7))
   pop()
 
   push()
   translate(0, len)
-  rotate(-PI / 6)
+  rotate(-PI / 5)
   branch(int(float(len)*0.7))
   pop()
 
