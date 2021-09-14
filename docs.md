@@ -93,11 +93,11 @@ proc pop()
 ```
 
 ## Inputs
-See the keys and mouse button codes [here](src/drawim/constants/keycodes.nim)
+See the keys and mouse buttons [here](src/drawim/constants/keycodes.nim)
 
 ```nim
 proc mouseX(): int
 proc mouseY(): int
-proc isKeyPressed(key: int): bool
-proc isMousePressed(btn: int): bool
+proc isKeyPressed(key: Key): bool
+proc isMousePressed(btn: MouseButton): bool
 ```
