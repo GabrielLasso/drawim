@@ -1,4 +1,4 @@
-import std/[dom, strformat], jscanvas
+import std/[dom, strformat], jscanvas, sequtils
 
 var canvas: CanvasElement
 var context: CanvasContext
@@ -12,11 +12,13 @@ var mouseX, mouseY: int
 
 var keys: array[256, bool]
 var mouseButtons: array[8, bool]
+var keysToClear: seq[int] = newSeq[int]()
+var mouseButtonsToClear: seq[int] = newSeq[int]()
 
 var frameRate = 60
 
 proc drawFilledPolygon*(vertices: seq[(int, int)]) =
-  context.fillStyle = &"rgb({fillColor[0]}, {fillColor[1]}, {fillColor[2]}, {fillColor[3]})"
+  context.fillStyle = &"rgba({fillColor[0]}, {fillColor[1]}, {fillColor[2]}, {int(strokeColor[3])/255})"
   context.beginPath()
   for (x, y) in vertices:
     context.lineTo(x, y)
@@ -25,7 +27,7 @@ proc drawFilledPolygon*(vertices: seq[(int, int)]) =
   context.fill()
 
 proc drawPolygon*(vertices: seq[(int, int)]) =
-  context.strokeStyle = &"rgb({strokeColor[0]}, {strokeColor[1]}, {strokeColor[2]}, {strokeColor[3]})"
+  context.strokeStyle = &"rgba({strokeColor[0]}, {strokeColor[1]}, {strokeColor[2]}, {int(strokeColor[3])/255})"
   context.beginPath()
   for (x, y) in vertices:
     context.lineTo(x, y)
@@ -34,7 +36,7 @@ proc drawPolygon*(vertices: seq[(int, int)]) =
   context.stroke()
 
 proc drawPath*(vertices: seq[(int, int)]) =
-  context.strokeStyle = fmt"rgb({strokeColor[0]}, {strokeColor[1]}, {strokeColor[2]}, {strokeColor[3]})"
+  context.strokeStyle = fmt"rgba({strokeColor[0]}, {strokeColor[1]}, {strokeColor[2]}, {int(strokeColor[3])/255})"
   context.beginPath()
   for (x, y) in vertices:
     context.lineTo(x, y)
@@ -76,7 +78,7 @@ let keydown = proc (e: Event) =
 
 let keyup = proc (e: Event) =
   let event = e.KeyboardEvent
-  keys[event.keyCode] = false
+  keysToClear.insert(event.keyCode)
 
 document.addEventListener("keydown", keydown)
 document.addEventListener("keyup", keyup)
@@ -87,7 +89,7 @@ let mousedown = proc (e: Event) =
 
 let mouseup = proc (e: Event) =
   let event = e.MouseEvent
-  mouseButtons[event.button] = false
+  mouseButtonsToClear.insert(event.button)
 
 document.addEventListener("mousedown", mousedown)
 document.addEventListener("mouseup", mouseup)
@@ -113,11 +115,25 @@ proc initialize*(name: string, w, h: int) =
     root.appendChild(canvas)
     context = canvas.getContext2d()
 
+proc drawAndClearInput(draw: proc()): proc() =
+  result = proc() =
+    draw()
+    for key in keysToClear:
+      keys[key] = false
+    if keysToClear.len > 0:
+      keysToClear.delete(0, keysToClear.len - 1)
+
+    for btn in mouseButtonsToClear:
+      mouseButtons[btn] = false
+    if mouseButtonsToClear.len > 0:
+      mouseButtonsToClear.delete(0, mouseButtonsToClear.len - 1)
+
 proc run*(w, h: int, draw: proc(), setup: proc(), name: string) =
   initialize(name, w, h)
   discard setTimeout(setup, 0)
   var recursion: proc()
+  let drawFrame = drawAndClearInput(draw)
   recursion = proc() =
     discard setTimeout(recursion, 1000 div frameRate)
-    discard setTimeout(draw, 0)
+    discard setTimeout(drawFrame, 0)
   discard setTimeout(recursion, 0)

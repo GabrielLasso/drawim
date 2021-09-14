@@ -5,8 +5,6 @@ when defined(js):
 else:
   import drawim/backends/opengl_backend as backend
 
-include drawim/constants/keycodes
-
 export colors, shapes, inputs
 export transform except resetTransform, getScreenPosition, getRealPosition
 
