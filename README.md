@@ -42,6 +42,7 @@ To do:
 - Stroke weight
 - Sprites
 - Fonts
+- Unit tests
 
 ## Documentation
 You can find the full docs [here](docs.md)
