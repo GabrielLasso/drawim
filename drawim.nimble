@@ -1,6 +1,6 @@
 # Package
 
-version = "0.1.1"
+version = "0.1.2"
 author = "GabrielLasso"
 description = "Simple library to draw stuff on a window"
 license = "MIT"
