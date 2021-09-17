@@ -84,8 +84,8 @@ proc resetTransform*() =
 
 proc getScreenPosition*(x, y: int|float): (int, int) =
   let (x_res, y_res) = (float(x), float(y)) * matrix
-  result = (int(x_res), int(y_res))
+  result = (int(x_res.round()), int(y_res.round()))
 
 proc getRealPosition*(x, y: int): (int, int) =
   let (x_res, y_res) = (float(x), float(y)) * reverse_matrix
-  result = (int(x_res), int(y_res))
+  result = (int(x_res.round()), int(y_res.round()))
