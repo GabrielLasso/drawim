@@ -1,9 +1,10 @@
 import opengl, staticglfw, std/[times, os], tables, sequtils
 
-var window_width: int
-var window_height: int
+var windowWidth: int
+var windowHeight: int
 var window: Window
 var mouseX, mouseY: int
+var pixelDensityX, pixelDensityY: int
 
 var frameRate = 60
 var lastTime: float
@@ -14,10 +15,10 @@ let btnStates: ref Table[cint, bool] = newTable[cint, bool]()
 var keysToClear: seq[cint] = newSeq[cint]()
 var mouseButtonsToClear: seq[cint] = newSeq[cint]()
 
-# Maps (0,0) to (-1, 1) and (window_width, window_height) to (1, -1)
+# Maps (0,0) to (-1, 1) and (windowWidth, windowHeight) to (1, -1)
 proc getGlCoords(x, y: int): (float, float) =
-  let new_x = 2 * (float(x) - window_width/2)/float(window_width)
-  let new_y = -2 * (float(y) - window_height/2)/float(window_height)
+  let new_x = 2 * (float(x) - windowWidth/2)/float(windowWidth)
+  let new_y = -2 * (float(y) - windowHeight/2)/float(windowHeight)
   return (new_x, new_y)
 
 proc drawFilledPolygon*(vertices: seq[(int, int)]) =
@@ -89,15 +90,17 @@ proc initialize(name: string, w, h: cint) =
   if init() == 0:
     quit("Failed to Initialize GLFW.")
 
-  var w = w
-  var h = h
-
   windowHint(RESIZABLE, false.cint)
 
   window = createWindow(cint(w), cint(h), name, nil, nil)
-  window.getFramebufferSize(addr w, addr h)
-  window_width = w
-  window_height = h
+
+  windowWidth = w
+  windowHeight = h
+
+  var bufferWidth, bufferHeight:cint
+  window.getFramebufferSize(addr(bufferWidth), addr(bufferHeight))
+  pixelDensityX = bufferWidth div windowWidth
+  pixelDensityY = bufferWidth div windowHeight
 
   discard window.setCursorPosCallback(cursorPos)
   discard window.setKeyCallback(keyCallback)
@@ -124,7 +127,7 @@ proc afterDraw() =
   window.swapBuffers()
   glReadBuffer(GL_FRONT)
   glDrawBuffer(GL_BACK)
-  glCopyPixels(0, 0, GLsizei(window_width), GLsizei(window_height), GL_COLOR)
+  glCopyPixels(0, 0, GLsizei(windowWidth * pixelDensityX), GLsizei(windowHeight * pixelDensityY), GL_COLOR)
   pollEvents()
 
   while epochTime() - lastTime < 1 / frameRate:
