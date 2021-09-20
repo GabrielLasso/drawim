@@ -85,13 +85,17 @@ proc isMousePressed*(btn: int): bool =
 proc setFrameRate*(newFrameRate: int) =
   frameRate = newFrameRate
 
-proc initialize(name: string, w, h: int) =
+proc initialize(name: string, w, h: cint) =
   if init() == 0:
     quit("Failed to Initialize GLFW.")
+
+  var w = w
+  var h = h
 
   windowHint(RESIZABLE, false.cint)
 
   window = createWindow(cint(w), cint(h), name, nil, nil)
+  window.getFramebufferSize(addr w, addr h)
   window_width = w
   window_height = h
 
@@ -134,7 +138,7 @@ proc terminate() =
 proc isRunning(): bool = windowShouldClose(window) != 1
 
 proc run*(w, h: int, draw: proc(), setup: proc(), name: string) =
-  initialize(name, w, h)
+  initialize(name, cint(w), cint(h))
   setup()
   while isRunning():
     draw()
